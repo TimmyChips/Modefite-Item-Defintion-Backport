@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
-	"id": "pommel",
+	"id": "relignite",
 	"version": "${version}",
-	"name": "Pommel - Held Item Models",
-	"description": "Allows resource pack creators to overwrite the models for held items and other render modes just like the spyglass and trident",
+	"name": "Relignite - Model Definition Backport",
+	"description": "Backports the items model definition system added in 1.21.4; Beta version, doesn't include everything and still uses Pommel icon.",
 	"authors": [
 		"TimmyChips"
 	],
@@ -34,7 +34,7 @@
 		"fabricloader": ">=0.15.11",
 		"minecraft": "~1.21",
 		"java": ">=21",
-		"fabric-api": "*"
+		"fabric-api": ">=0.116.0+1.21.1"
 	},
 	"suggests": {
 		"another-mod": "*"
