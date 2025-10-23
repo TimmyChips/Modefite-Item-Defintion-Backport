@@ -9,6 +9,8 @@ public record EmptyModelDefinition(Identifier type) implements ItemModelDefiniti
             Identifier.CODEC.fieldOf("type").forGetter(EmptyModelDefinition::type)
     ).apply(instance, EmptyModelDefinition::new));
 
+    public static final Identifier TYPE = Identifier.of("minecraft:empty");
+
     @Override
     public MapCodec<? extends ItemModelDefinition> getCodec() {
         return CODEC;
@@ -16,6 +18,6 @@ public record EmptyModelDefinition(Identifier type) implements ItemModelDefiniti
 
     @Override
     public Identifier expectedType() {
-        return Identifier.of("minecraft:empty");
+        return TYPE;
     }
 }

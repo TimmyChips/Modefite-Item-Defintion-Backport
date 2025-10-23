@@ -12,6 +12,8 @@ public record ModelDefinition(Identifier type, Identifier model) implements Item
             Identifier.CODEC.fieldOf("model").forGetter(ModelDefinition::model)
     ).apply(instance, ModelDefinition::new));
 
+    public static final Identifier TYPE = Identifier.of("minecraft:model");
+
     @Override
     public MapCodec<? extends ItemModelDefinition> getCodec() {
         return CODEC;
@@ -19,10 +21,6 @@ public record ModelDefinition(Identifier type, Identifier model) implements Item
 
     @Override
     public Identifier expectedType() {
-        return Identifier.of("minecraft:model");
-    }
-
-    public BakedModel bake(FabricBakedModelManager manager) {
-        return manager.getModel(model());
+        return TYPE;
     }
 }

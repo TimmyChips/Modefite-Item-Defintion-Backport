@@ -62,7 +62,7 @@ public class ClientInitializer implements ClientModInitializer {
                                 ItemModelRootDefinition rootDef = new ItemModelRootDefinition(definition, handAnimationOnSwap, oversizedInGui, swapAnimationScale);
 
 //                                ItemModelRegistry.put(itemId, pair.getFirst()); // don’t forget to store it!
-                                ItemModelRegistry.putRoot(itemId, rootDef);
+                                ItemModelTypes.Registry.putRoot(itemId, rootDef);
                                 LOGGER.info("[Pommel] Successfully decoded item model definition for: {}", itemId);
                             });
                 } else {
@@ -90,7 +90,7 @@ public class ClientInitializer implements ClientModInitializer {
 
 			LOGGER.info("Pommel: Reloading Resource Manager");
 
-			ItemModelRegistry.clear();
+			ItemModelTypes.Registry.clear();
 			RangePropertyRegistry.init();
 			ConditionPropertyRegistry.init();
 			SelectPropertyRegistry.init();
@@ -98,7 +98,7 @@ public class ClientInitializer implements ClientModInitializer {
 			registerResources("items", manager);
             registerResources("pommel_items_override", manager); // The resource folder where you should use modded properties
 
-			modelIds = ItemModelRegistry.getAllModelDependencies();
+			modelIds = ItemModelTypes.Registry.getAllModelDependencies();
 //			modelIds.forEach(id -> LOGGER.info("[Pommel] Registering model dependency: {}", id));
 
 			LOGGER.info("Pommel: ModelLoadingPlugin loading models");

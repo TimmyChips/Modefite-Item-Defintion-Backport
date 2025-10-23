@@ -13,6 +13,8 @@ public record CompositeModelDefinition(Identifier type, List<ItemModelDefinition
             ItemModelTypes.CODEC.listOf().fieldOf("models").forGetter(CompositeModelDefinition::models)
     ).apply(instance, CompositeModelDefinition::new));
 
+    public static final Identifier TYPE = Identifier.of("minecraft:composite");
+
     @Override
     public MapCodec<? extends ItemModelDefinition> getCodec() {
         return CODEC;
@@ -20,6 +22,6 @@ public record CompositeModelDefinition(Identifier type, List<ItemModelDefinition
 
     @Override
     public Identifier expectedType() {
-        return Identifier.of("minecraft:composite");
+        return TYPE;
     }
 }

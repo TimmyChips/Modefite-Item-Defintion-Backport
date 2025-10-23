@@ -25,8 +25,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import timmychips.relignitemodeldefinitions.ItemModelRegistry;
 import timmychips.relignitemodeldefinitions.bakedmodels.CompositeItemModel;
+import timmychips.relignitemodeldefinitions.property.type.ItemModelTypes;
 
 import java.util.List;
 import java.util.Optional;
@@ -140,7 +140,7 @@ public abstract class HeldItemMixin {
         BakedModelManager missingModelManager = MinecraftClient.getInstance().getBakedModelManager();
 
         // If item's items model definition has an invalid model type, returns missing item model
-        for (Identifier id : ItemModelRegistry.INVALID_MODEL_TYPES) {
+        for (Identifier id : ItemModelTypes.Registry.INVALID_MODEL_TYPES) {
             if (Registries.ITEM.getId(stack.getItem()).equals(id)) { // Checks if INVALID_TYPES Set contains item id
                 return missingModelManager.getMissingModel(); // Item renders as Missing Model
             }

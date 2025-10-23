@@ -75,6 +75,8 @@ public final class SelectDefinition {
                     )));
         }
 
+        public static final Identifier TYPE = Identifier.of("minecraft:select");
+
         @Override
         public MapCodec<? extends ItemModelDefinition> getCodec() {
             return codec(ItemModelTypes.CODEC);

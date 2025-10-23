@@ -54,6 +54,8 @@ public final class RangeDispatchDefinition {
             ));
         }
 
+        public static final Identifier TYPE = Identifier.of("minecraft:range_dispatch");
+
         @Override
         public MapCodec<? extends ItemModelDefinition> getCodec() {
             return codec(ItemModelTypes.CODEC);
@@ -61,7 +63,7 @@ public final class RangeDispatchDefinition {
 
         @Override
         public Identifier expectedType() {
-            return Identifier.of("minecraft:range_dispatch");
+            return TYPE;
         }
     }
 
