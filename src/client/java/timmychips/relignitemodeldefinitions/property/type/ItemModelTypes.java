@@ -25,6 +25,9 @@ public class ItemModelTypes {
         ID_MAPPER.put(EmptyModelDefinition.TYPE,               EmptyModelDefinition.CODEC);
     }
 
+    /**
+     * Class that handles registering item identifier to definition codec
+     */
     public static class Registry {
         private static final Map<Identifier, ItemModelDefinition> definitions = new HashMap<>();
         private static final Map<Identifier, ItemModelRootDefinition> rootDefinitions = new HashMap<>();
@@ -79,6 +82,11 @@ public class ItemModelTypes {
             return dependencies;
         }
 
+        /**
+         * Collect models recursively from definitions
+         * @param def The model definition to collect models from
+         * @param out The set of item identifiers to load models for
+         */
         private static void collectModelsFromDefinition(ItemModelDefinition def, Set<Identifier> out) {
             if (def instanceof ModelDefinition model) {
                 out.add(model.model());
@@ -98,6 +106,11 @@ public class ItemModelTypes {
                     collectModelsFromDefinition(entry.model(), out);
                 }
                 collectModelsFromDefinition(range.fallback(), out);
+
+            } else if (def instanceof CompositeModelDefinition composite) {
+                for (ItemModelDefinition defPart : composite.models()) {
+                    collectModelsFromDefinition(defPart, out);
+                }
             }
             // Extend here for other custom model types if needed
         }
