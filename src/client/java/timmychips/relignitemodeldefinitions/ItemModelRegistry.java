@@ -23,10 +23,6 @@ public class ItemModelRegistry {
     private static final Identifier COMPOSITE = Identifier.of("minecraft:composite");
     private static final Identifier EMPTY = Identifier.of("minecraft:empty");
 
-    public static void put(Identifier id, ItemModelDefinition definition) {
-        if (validateType(id, definition)) definitions.put(id, definition);
-    }
-
     public static void putRoot(Identifier id, ItemModelRootDefinition root) {
         if (root.model() != null && validateType(id, root.model())) {
             definitions.put(id, root.model()); // Put the id of the item and the ItemModelDefinition into Map
@@ -39,35 +35,16 @@ public class ItemModelRegistry {
         return rootDefinitions.get(id);
     }
 
+    /**
+     *
+     * @param id Item identifier
+     * @param definition The item model definition object associated with the item to verify
+     * @return True if the definition's actual type matches what it's expecting
+     */
     public static boolean validateType(Identifier id, ItemModelDefinition definition) {
-        Identifier specifiedType = null;
-
-        switch (definition) {
-            case ModelDefinition def -> {
-                if (!def.type().equals(MODEL)) specifiedType = def.type();
-            }
-            case CompositeModelDefinition def -> {
-                if (!def.type().equals(COMPOSITE)) specifiedType = def.type();
-            }
-            case EmptyModelDefinition def -> {
-                if (!def.type().equals(EMPTY)) specifiedType = def.type();
-            }
-            case ConditionDefinition def -> {
-                if (!def.type().equals(CONDITION)) specifiedType = def.type();
-            }
-            case SelectDefinition.Definition def -> {
-                if (!def.type().equals(SELECT)) specifiedType = def.type();
-            }
-            case RangeDispatchDefinition.Definition def -> {
-                if (!def.type().equals(RANGE)) specifiedType = def.type();
-            }
-            case null, default -> {
-            }
-        }
-
-        if (specifiedType != null) {
+        if (!definition.type().equals(definition.expectedType())) {
             INVALID_MODEL_TYPES.add(id);
-            ClientInitializer.LOGGER.error("Couldn't parse item '{}': Unknown item model type id: {}", id, specifiedType);
+            ClientInitializer.LOGGER.error("Couldn't parse item '{}': Unknown item model type id: {}", id, definition.type());
             return false;
         }
         return true;

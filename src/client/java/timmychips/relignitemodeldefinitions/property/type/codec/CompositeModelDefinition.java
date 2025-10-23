@@ -17,4 +17,9 @@ public record CompositeModelDefinition(Identifier type, List<ItemModelDefinition
     public MapCodec<? extends ItemModelDefinition> getCodec() {
         return CODEC;
     }
+
+    @Override
+    public Identifier expectedType() {
+        return Identifier.of("minecraft:composite");
+    }
 }

@@ -17,6 +17,11 @@ public record ModelDefinition(Identifier type, Identifier model) implements Item
         return CODEC;
     }
 
+    @Override
+    public Identifier expectedType() {
+        return Identifier.of("minecraft:model");
+    }
+
     public BakedModel bake(FabricBakedModelManager manager) {
         return manager.getModel(model());
     }

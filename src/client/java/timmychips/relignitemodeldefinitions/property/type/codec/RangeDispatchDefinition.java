@@ -58,6 +58,11 @@ public final class RangeDispatchDefinition {
         public MapCodec<? extends ItemModelDefinition> getCodec() {
             return codec(ItemModelTypes.CODEC);
         }
+
+        @Override
+        public Identifier expectedType() {
+            return Identifier.of("minecraft:range_dispatch");
+        }
     }
 
     public record ThresholdEntry(ItemModelDefinition model, float threshold) {

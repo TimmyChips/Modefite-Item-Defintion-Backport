@@ -70,4 +70,9 @@ public record ConditionDefinition(
     public MapCodec<? extends ItemModelDefinition> getCodec() {
         return codec(ItemModelTypes.CODEC);
     }
+
+    @Override
+    public Identifier expectedType() {
+        return Identifier.of("minecraft:condition");
+    }
 }

@@ -13,4 +13,9 @@ public record EmptyModelDefinition(Identifier type) implements ItemModelDefiniti
     public MapCodec<? extends ItemModelDefinition> getCodec() {
         return CODEC;
     }
+
+    @Override
+    public Identifier expectedType() {
+        return Identifier.of("minecraft:empty");
+    }
 }
