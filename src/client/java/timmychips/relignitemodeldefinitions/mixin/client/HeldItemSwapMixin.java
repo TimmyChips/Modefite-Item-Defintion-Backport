@@ -58,7 +58,7 @@ public abstract class HeldItemSwapMixin {
             ),
             index = 3 // equipProgress parameter index
     )
-    private float disableEmptyHandEquipProgress(float equipProgress) {
+    private float relignite$disableEmptyHandEquipProgress(float equipProgress) {
         return doModelOffHandSwap(equipProgress);
     }
 
@@ -70,7 +70,7 @@ public abstract class HeldItemSwapMixin {
             ),
             index = 2 // equipProgress parameter index
     )
-    private float disableItemEquipProgress(float equipProgress) {
+    private float relignite$disableItemEquipProgress(float equipProgress) {
         return doModelOffHandSwap(equipProgress);
     }
 }

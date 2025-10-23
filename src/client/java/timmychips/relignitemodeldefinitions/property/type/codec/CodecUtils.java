@@ -2,9 +2,6 @@ package timmychips.relignitemodeldefinitions.property.type.codec;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import net.minecraft.util.Identifier;
-import timmychips.relignitemodeldefinitions.ClientInitializer;
 
 import java.util.List;
 

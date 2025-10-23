@@ -11,5 +11,5 @@ public interface KeyBindingAccessor {
     @Accessor("KEYS_BY_ID")
     static Map<String, KeyBinding> getKeyIds() {
         throw new AssertionError();
-    };
+    }
 }

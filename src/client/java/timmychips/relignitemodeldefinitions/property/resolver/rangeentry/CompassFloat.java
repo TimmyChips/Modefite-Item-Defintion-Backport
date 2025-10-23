@@ -23,8 +23,6 @@ import timmychips.relignitemodeldefinitions.property.type.codec.RangeDispatchDef
 
 public class CompassFloat implements RangePropertyHandler {
 
-    public static final Logger LOGGER = LogUtils.getLogger();
-    public static float compassAngle;
     private final AngleInterpolator aimedInterpolator = new AngleInterpolator();
     private final AngleInterpolator aimlessInterpolator = new AngleInterpolator();
 

@@ -32,7 +32,7 @@ public class ItemModelTypes {
         private static final Map<Identifier, ItemModelDefinition> definitions = new HashMap<>();
         private static final Map<Identifier, ItemModelRootDefinition> rootDefinitions = new HashMap<>();
 
-        public static Set<Identifier> INVALID_MODEL_TYPES = new HashSet<>();
+        public static final Set<Identifier> INVALID_MODEL_TYPES = new HashSet<>();
 
         public static void putRoot(Identifier id, ItemModelRootDefinition root) {
             if (root.model() != null && validateType(id, root.model())) {

@@ -64,7 +64,7 @@ public class EmptyItemModel implements BakedModel {
 
     @Override
     public boolean isVanillaAdapter() {
-        return BakedModel.super.isVanillaAdapter();
+        return false;
     }
 
     @Override

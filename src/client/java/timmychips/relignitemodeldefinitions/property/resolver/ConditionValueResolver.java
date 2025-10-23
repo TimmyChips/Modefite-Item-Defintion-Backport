@@ -9,9 +9,6 @@ import timmychips.relignitemodeldefinitions.property.registry.ConditionPropertyR
 import timmychips.relignitemodeldefinitions.property.type.codec.ConditionDefinition;
 
 public class ConditionValueResolver {
-
-    public static final Logger LOGGER = LogUtils.getLogger();
-
     public static boolean evaluate(
             Identifier property,
             ItemStack stack, LivingEntity entity,
