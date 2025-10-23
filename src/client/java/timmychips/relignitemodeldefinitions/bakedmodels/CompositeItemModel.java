@@ -92,33 +92,6 @@ public class CompositeItemModel implements BakedModel {
                 .orElse(MinecraftClient.getInstance().getBakedModelManager().getMissingModel().getParticleSprite());
     }
 
-    static Transformation extractTransformation(BakedModel model, ModelTransformationMode mode) {
-        if (model != null) {
-            ModelTransformation modelTransformation = model.getTransformation();
-            if (modelTransformation != null) {
-                Transformation transformation = modelTransformation.getTransformation(mode);
-                if (transformation != Transformation.IDENTITY) {
-                    return transformation;
-                }
-            }
-        }
-
-        return Transformation.IDENTITY;
-    }
-
-    static ModelTransformation copyTransformations(BakedModel part) {
-        Transformation transformation = extractTransformation(part, ModelTransformationMode.THIRD_PERSON_LEFT_HAND);
-        Transformation transformation2 = extractTransformation(part, ModelTransformationMode.THIRD_PERSON_RIGHT_HAND);
-        Transformation transformation3 = extractTransformation(part, ModelTransformationMode.FIRST_PERSON_LEFT_HAND);
-        Transformation transformation4 = extractTransformation(part, ModelTransformationMode.FIRST_PERSON_RIGHT_HAND);
-        Transformation transformation5 = extractTransformation(part, ModelTransformationMode.HEAD);
-        Transformation transformation6 = extractTransformation(part, ModelTransformationMode.GUI);
-        Transformation transformation7 = extractTransformation(part, ModelTransformationMode.GROUND);
-        Transformation transformation8 = extractTransformation(part, ModelTransformationMode.FIXED);
-        return new ModelTransformation(transformation, transformation2, transformation3, transformation4, transformation5, transformation6, transformation7, transformation8);
-    }
-
-    // TODO only gets transformations from the first model, need to do per-part transformations
     @Override
     public ModelTransformation getTransformation() {
         List<BakedModel> children = modelParts.stream()
@@ -127,13 +100,12 @@ public class CompositeItemModel implements BakedModel {
                 .toList();
 
         for (BakedModel part : children) {
-//            return copyTransformations(part);
             return part.getTransformation();
         }
         return ModelTransformation.NONE;
     }
 
-    // Get item overrides; doesn't matter though since we're replacing the item override system
+    // Get item overrides; doesn't matter too much though since we're replacing the item override system
     @Override
     public ModelOverrideList getOverrides() {
         return modelParts.stream()
@@ -149,21 +121,12 @@ public class CompositeItemModel implements BakedModel {
         return false; // False to trigger FabricBakedModel rendering
     }
 
+    // Emit item quads for each model part
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-        List<BakedModel> bakedModels = modelParts.stream()
-                .map(part -> ResolveRecursive.resolve(part, renderMode, stack, entity)
-                        .orElse(ResolveRecursive.getMissingModel()))
-                .toList();
-
         modelParts.stream()
                 .map(part -> ResolveRecursive.resolve(part, renderMode, stack, entity)
                         .orElse(ResolveRecursive.getMissingModel()))
                 .forEach(baked -> baked.emitItemQuads(stack, randomSupplier, context));
-
-        // Emit all quads
-//        for (BakedModel part : bakedModels) {
-//            part.emitItemQuads(stack, randomSupplier, context);
-//        }
     }
 }

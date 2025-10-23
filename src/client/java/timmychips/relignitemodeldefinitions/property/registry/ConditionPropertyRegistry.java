@@ -3,6 +3,7 @@ package timmychips.relignitemodeldefinitions.property.registry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import timmychips.relignitemodeldefinitions.ClientInitializer;
 import timmychips.relignitemodeldefinitions.property.handler.ConditionPropertyHandler;
 import timmychips.relignitemodeldefinitions.property.resolver.condition.*;
 import timmychips.relignitemodeldefinitions.property.resolver.condition.custom.HoveredItemBool;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 public class ConditionPropertyRegistry {
     private static final Map<Identifier, ConditionPropertyHandler> HANDLERS = new HashMap<>();
+    private static final String MOD_ID = ClientInitializer.MOD_NAMESPACE;
 
     public static void init() {
         register(Identifier.of("minecraft:broken"), new BrokenBool());
@@ -30,8 +32,8 @@ public class ConditionPropertyRegistry {
         register(Identifier.of("minecraft:view_entity"), new ViewEntityBool());
 
         // Custom, modded Properties
-        register(Identifier.of("pommel:hovered_item"), new HoveredItemBool());
-        register(Identifier.of("pommel:submerged"), new SubmergedBool());
+        register(Identifier.of(MOD_ID + ":hovered_item"), new HoveredItemBool());
+        register(Identifier.of(MOD_ID + ":submerged"), new SubmergedBool());
     }
 
     private static void register(Identifier id, ConditionPropertyHandler handler) {

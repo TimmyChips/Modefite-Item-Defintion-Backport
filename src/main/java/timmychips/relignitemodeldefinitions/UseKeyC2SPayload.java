@@ -10,8 +10,10 @@ import net.minecraft.util.Uuids;
 
 import java.util.UUID;
 
+import static timmychips.relignitemodeldefinitions.ServerInitializer.MOD_ID;
+
 public record UseKeyC2SPayload(UUID playerUuid, ItemStack itemStack, boolean isUsing) implements CustomPayload {
-    public static final Identifier ID = Identifier.of("pommel", "use_key");
+    public static final Identifier ID = Identifier.of(MOD_ID, "use_key");
     public static final CustomPayload.Id<UseKeyC2SPayload> PACKET_ID = new CustomPayload.Id<>(ID);
 
     public static final PacketCodec<RegistryByteBuf, UseKeyC2SPayload> CODEC = PacketCodec.tuple(

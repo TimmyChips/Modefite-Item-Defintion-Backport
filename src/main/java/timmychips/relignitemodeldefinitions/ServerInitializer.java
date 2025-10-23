@@ -3,12 +3,11 @@ package timmychips.relignitemodeldefinitions;
 import net.fabricmc.api.ModInitializer;
 
 public class ServerInitializer implements ModInitializer {
+    public static final String MOD_ID = "relignite";
 
     @Override
     public void onInitialize() {
-        PommelNetworking.registerPayloads();
-        PommelNetworking.useKeyGlobalReceiver();
-
-        ItemTest.initItem();
+        ReligniteNetworking.registerPayloads();
+        ReligniteNetworking.useKeyGlobalReceiver();
     }
 }

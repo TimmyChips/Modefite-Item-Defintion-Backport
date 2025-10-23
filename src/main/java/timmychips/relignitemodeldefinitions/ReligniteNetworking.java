@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
 
-public class PommelNetworking {
+public class ReligniteNetworking {
     public static void registerPayloads() {
         PayloadTypeRegistry.playC2S().register(UseKeyC2SPayload.PACKET_ID, UseKeyC2SPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(UseKeyS2CPayload.PACKET_ID, UseKeyS2CPayload.CODEC);

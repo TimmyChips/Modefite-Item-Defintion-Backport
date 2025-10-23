@@ -42,7 +42,7 @@ public abstract class HeldItemMixin {
     @Inject(method = "getModel(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;I)Lnet/minecraft/client/render/model/BakedModel;",
             at = @At("HEAD"),
             cancellable = true)
-    private void pommel$overrideGUIModel(ItemStack stack, World world, LivingEntity entity, int seed, CallbackInfoReturnable<BakedModel> cir) {
+    private void relignite$overrideGUIModel(ItemStack stack, World world, LivingEntity entity, int seed, CallbackInfoReturnable<BakedModel> cir) {
         BakedModel gui_model = getCustomModel(stack, entity, ModelTransformationMode.GUI);
         if (gui_model != null) {
             cir.setReturnValue(gui_model);
@@ -74,7 +74,7 @@ public abstract class HeldItemMixin {
     @Inject(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V",
             at = @At(value = "HEAD"),
             cancellable = true)
-    private void renderCompositeModel(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
+    private void relignite$renderCompositeModel(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
         if (!stack.isEmpty()) {
             if (model instanceof CompositeItemModel compositeModel) {
                 // Retrieve list of baked models from CompositeItemModel object
@@ -119,7 +119,7 @@ public abstract class HeldItemMixin {
     @Inject(method = "renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/world/World;III)V",
             at = @At(value = "HEAD"),
             cancellable = true)
-    private void pommel$interceptRender(LivingEntity entity, ItemStack item, ModelTransformationMode renderMode, boolean leftHanded,
+    private void relignite$interceptRender(LivingEntity entity, ItemStack item, ModelTransformationMode renderMode, boolean leftHanded,
                                         MatrixStack matrices, VertexConsumerProvider vertexConsumers, World world,
                                         int light, int overlay, int seed, CallbackInfo ci) {
 

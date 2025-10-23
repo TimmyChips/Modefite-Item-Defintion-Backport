@@ -24,6 +24,7 @@ import java.util.Collection;
 
 public class ClientInitializer implements ClientModInitializer {
 
+    public static final String MOD_NAMESPACE = "relignite";
 	public static final Logger LOGGER = LogUtils.getLogger();
 	public static Collection<Identifier> modelIds;
 
@@ -37,7 +38,6 @@ public class ClientInitializer implements ClientModInitializer {
             try (InputStream stream = manager.getResource(id).get().getInputStream()) {
                 JsonElement json = JsonParser.parseReader(new InputStreamReader(stream));
 
-                // TODO: load models defined in "models" for composite item model type
                 JsonObject root = json.getAsJsonObject();
 
                 // Optional fields
@@ -45,14 +45,11 @@ public class ClientInitializer implements ClientModInitializer {
                 boolean oversizedInGui = root.has(OVERSIZED_IN_GUI) && root.get(OVERSIZED_IN_GUI).getAsBoolean();
                 float swapAnimationScale = root.has(SWAP_ANIMATION_SCALE) ? root.get(SWAP_ANIMATION_SCALE).getAsFloat() : 1F; // 1.0 if not specified
 
-                LOGGER.info("[Pommel] Parsed extra fields for {}: hand_animation_on_swap={}, oversized_in_gui={}, swap_animation_scale={}",
-                        id, handAnimationOnSwap, oversizedInGui, swapAnimationScale);
-
                 JsonElement modelElement = root.get("model");
 
                 if (modelElement != null && modelElement.isJsonObject()) {
                     ItemModelTypes.CODEC.decode(JsonOps.INSTANCE, modelElement)
-                            .resultOrPartial(error -> LOGGER.warn("[Pommel] Failed to decode model definition for {}: {}", id, error))
+                            .resultOrPartial(error -> LOGGER.warn("Failed to decode model definition for {}: {}", id, error))
                             .ifPresent(pair -> {
                                 // Clean up path to match item ID (remove "items/" and ".json")
                                 String cleanPath = id.getPath().substring((folderName + "/").length(), id.getPath().length() - ".json".length());
@@ -61,16 +58,15 @@ public class ClientInitializer implements ClientModInitializer {
                                 ItemModelDefinition definition = pair.getFirst();
                                 ItemModelRootDefinition rootDef = new ItemModelRootDefinition(definition, handAnimationOnSwap, oversizedInGui, swapAnimationScale);
 
-//                                ItemModelRegistry.put(itemId, pair.getFirst()); // don’t forget to store it!
-                                ItemModelTypes.Registry.putRoot(itemId, rootDef);
-                                LOGGER.info("[Pommel] Successfully decoded item model definition for: {}", itemId);
+                                ItemModelTypes.Registry.putRoot(itemId, rootDef); // Register item and root definition
+//                                LOGGER.info("Successfully decoded item model definition for: {}", itemId);
                             });
                 } else {
-                    LOGGER.warn("[Pommel] No 'model' field found in item JSON for {}", id);
+                    LOGGER.warn("No 'model' field found in item JSON for {}", id);
                 }
 
             } catch (Exception e) {
-                LOGGER.warn("[Pommel] Failed to parse item definition for {}", id, e);
+                LOGGER.warn("Failed to parse item definition for {}", id, e);
             }
         }
     }
@@ -88,20 +84,18 @@ public class ClientInitializer implements ClientModInitializer {
 
 			ResourceManager manager = MinecraftClient.getInstance().getResourceManager();
 
-			LOGGER.info("Pommel: Reloading Resource Manager");
-
 			ItemModelTypes.Registry.clear();
 			RangePropertyRegistry.init();
 			ConditionPropertyRegistry.init();
 			SelectPropertyRegistry.init();
 
 			registerResources("items", manager);
-            registerResources("pommel_items_override", manager); // The resource folder where you should use modded properties
+            String overrideFolderName = MOD_NAMESPACE + "_items_override"; // relignite_items_override
+            registerResources(overrideFolderName, manager); // The resource folder where you should use modded properties
 
 			modelIds = ItemModelTypes.Registry.getAllModelDependencies();
-//			modelIds.forEach(id -> LOGGER.info("[Pommel] Registering model dependency: {}", id));
 
-			LOGGER.info("Pommel: ModelLoadingPlugin loading models");
+			LOGGER.info("{}: loading models", MOD_NAMESPACE.toUpperCase());
 			pluginContext.addModels(modelIds);
 		});
 	}

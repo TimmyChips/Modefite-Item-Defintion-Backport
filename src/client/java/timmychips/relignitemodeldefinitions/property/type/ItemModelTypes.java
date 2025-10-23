@@ -3,7 +3,7 @@ package timmychips.relignitemodeldefinitions.property.type;
 import com.mojang.serialization.Codec;
 import net.minecraft.util.Identifier;
 import timmychips.relignitemodeldefinitions.ClientInitializer;
-import timmychips.relignitemodeldefinitions.property.helper.PommelIdMapper;
+import timmychips.relignitemodeldefinitions.property.helper.DefinitionIdMapper;
 import timmychips.relignitemodeldefinitions.property.type.codec.*;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ItemModelTypes {
-    public static final PommelIdMapper ID_MAPPER = new PommelIdMapper();
+    public static final DefinitionIdMapper ID_MAPPER = new DefinitionIdMapper();
     public static final Codec<ItemModelDefinition> CODEC = Codec.lazyInitialized(() -> ID_MAPPER.getCodec(Identifier.CODEC));
 
     static {

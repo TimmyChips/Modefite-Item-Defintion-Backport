@@ -38,10 +38,6 @@ public record ConditionDefinition(
         }, KeyBinding::getTranslationKey);
     }
 
-    // TODO
-    //  Work on sending packet of data to server:
-    //    -> Fetch fix of decoding packets with complex data from enchanted_books, bottles, etc. from other branch
-
     public static MapCodec<ConditionDefinition> codec(Codec<ItemModelDefinition> selfCodec) {
         return RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Identifier.CODEC.fieldOf("type").forGetter(ConditionDefinition::type),

@@ -13,10 +13,6 @@ import java.util.Map;
 public class RangePropertyRegistry {
     private static final Map<Identifier, RangePropertyHandler> HANDLERS = new HashMap<>();
 
-    // TODO
-    //  Reorganize project structure to have "property" folder with "handler", "resolver", "type", and "register"
-    //  Refactor other parts of code to new interface object system
-
     // Register each property
     public static void init() {
         register(Identifier.of("minecraft:bundle/fullness"), new BundleFullnessFloat());

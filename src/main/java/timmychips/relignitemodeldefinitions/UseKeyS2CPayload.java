@@ -11,7 +11,7 @@ import net.minecraft.util.Uuids;
 import java.util.UUID;
 
 public record UseKeyS2CPayload(UUID playerUuid, ItemStack itemStack, boolean isUsing) implements CustomPayload {
-    public static final Identifier ID = Identifier.of("pommel", "use_key_sync");
+    public static final Identifier ID = Identifier.of(ServerInitializer.MOD_ID, "use_key_sync");
     public static final CustomPayload.Id<UseKeyS2CPayload> PACKET_ID = new CustomPayload.Id<>(ID);
 
     public static final PacketCodec<RegistryByteBuf, UseKeyS2CPayload> CODEC = PacketCodec.tuple(

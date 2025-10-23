@@ -10,12 +10,6 @@ import timmychips.relignitemodeldefinitions.property.type.ItemModelTypes;
 import java.util.*;
 import java.util.stream.Collectors;
 
-// Todo
-//  Will technically parse Identifiers into Strings, not alike Vanilla
-//  Example: arrow and minecraft:arrow both work for property, charge_type in the mod.
-//  Technically this example does not work in Vanilla, minecraft:arrow throws an error in Vanilla
-//  Revisit?
-
 public final class SelectDefinition {
     public record Definition(
             Identifier type,
@@ -55,7 +49,7 @@ public final class SelectDefinition {
         public static MapCodec<Definition> codec(Codec<ItemModelDefinition> selfCodec) {
             return RecordCodecBuilder.mapCodec(instance -> instance.group(
                     Identifier.CODEC.fieldOf("type").forGetter(Definition::type),
-                    Case.codec(selfCodec, CodecUtils.IdentifierOrStringAsStringCodec) // Accepts short string, or full id
+                    Case.codec(selfCodec, Codec.STRING)
                             .listOf()
                             .fieldOf("cases")
                             .forGetter(Definition::cases),
