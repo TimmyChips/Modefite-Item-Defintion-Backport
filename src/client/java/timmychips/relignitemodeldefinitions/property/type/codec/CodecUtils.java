@@ -1,4 +1,4 @@
-package timmychips.relignitemodeldefinitions.property.type;
+package timmychips.relignitemodeldefinitions.property.type.codec;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;

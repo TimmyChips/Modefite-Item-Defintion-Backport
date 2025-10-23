@@ -14,8 +14,8 @@ import org.slf4j.Logger;
 import timmychips.relignitemodeldefinitions.property.registry.ConditionPropertyRegistry;
 import timmychips.relignitemodeldefinitions.property.registry.RangePropertyRegistry;
 import timmychips.relignitemodeldefinitions.property.registry.SelectPropertyRegistry;
-import timmychips.relignitemodeldefinitions.property.type.ItemModelDefinition;
-import timmychips.relignitemodeldefinitions.property.type.ItemModelRootDefinition;
+import timmychips.relignitemodeldefinitions.property.type.codec.ItemModelDefinition;
+import timmychips.relignitemodeldefinitions.property.type.codec.ItemModelRootDefinition;
 import timmychips.relignitemodeldefinitions.property.type.ItemModelTypes;
 
 import java.io.InputStream;

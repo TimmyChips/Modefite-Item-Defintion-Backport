@@ -6,7 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import timmychips.relignitemodeldefinitions.ItemModelRegistry;
-import timmychips.relignitemodeldefinitions.property.type.ItemModelDefinition;
+import timmychips.relignitemodeldefinitions.property.type.codec.ItemModelDefinition;
 
 import java.util.Optional;
 

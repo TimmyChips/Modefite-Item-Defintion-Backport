@@ -1,10 +1,12 @@
-package timmychips.relignitemodeldefinitions.property.type;
+package timmychips.relignitemodeldefinitions.property.type.codec;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
+import timmychips.relignitemodeldefinitions.property.type.ItemModelTypes;
+
 import java.util.*;
 import java.util.stream.Collectors;
 

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import timmychips.relignitemodeldefinitions.ItemModelRegistry;
-import timmychips.relignitemodeldefinitions.property.type.ItemModelRootDefinition;
+import timmychips.relignitemodeldefinitions.property.type.codec.ItemModelRootDefinition;
 
 /**
  * Lets the JSON boolean, "hand_animation_on_swap" disable the equipment animation when swapping items

@@ -5,7 +5,7 @@ import com.google.common.collect.HashBiMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.util.Identifier;
-import timmychips.relignitemodeldefinitions.property.type.ItemModelDefinition;
+import timmychips.relignitemodeldefinitions.property.type.codec.ItemModelDefinition;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package timmychips.relignitemodeldefinitions.property.type;
+package timmychips.relignitemodeldefinitions.property.type.codec;
 
 import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
@@ -10,6 +10,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import timmychips.relignitemodeldefinitions.property.helper.JsonElementHelper;
 import timmychips.relignitemodeldefinitions.mixin.client.KeyBindingAccessor;
+import timmychips.relignitemodeldefinitions.property.type.ItemModelTypes;
 
 import java.util.Optional;
 

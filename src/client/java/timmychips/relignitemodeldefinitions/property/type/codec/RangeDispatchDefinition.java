@@ -1,4 +1,4 @@
-package timmychips.relignitemodeldefinitions.property.type;
+package timmychips.relignitemodeldefinitions.property.type.codec;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -7,6 +7,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import timmychips.relignitemodeldefinitions.property.resolver.rangeentry.ClockTimeFloat;
 import timmychips.relignitemodeldefinitions.property.resolver.rangeentry.CompassFloat;
+import timmychips.relignitemodeldefinitions.property.type.ItemModelTypes;
 
 import java.util.List;
 import java.util.Optional;

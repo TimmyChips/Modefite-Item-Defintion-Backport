@@ -2,7 +2,7 @@
 package timmychips.relignitemodeldefinitions;
 
 import net.minecraft.util.Identifier;
-import timmychips.relignitemodeldefinitions.property.type.*;
+import timmychips.relignitemodeldefinitions.property.type.codec.*;
 
 import java.util.HashMap;
 import java.util.HashSet;

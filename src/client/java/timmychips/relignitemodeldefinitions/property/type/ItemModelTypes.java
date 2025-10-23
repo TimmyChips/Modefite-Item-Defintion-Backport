@@ -3,6 +3,7 @@ package timmychips.relignitemodeldefinitions.property.type;
 import com.mojang.serialization.Codec;
 import net.minecraft.util.Identifier;
 import timmychips.relignitemodeldefinitions.property.helper.PommelIdMapper;
+import timmychips.relignitemodeldefinitions.property.type.codec.*;
 
 public class ItemModelTypes {
     public static final PommelIdMapper ID_MAPPER = new PommelIdMapper();
