@@ -38,6 +38,9 @@ import static timmychips.relignitemodeldefinitions.property.resolver.ItemModelRe
 @Mixin(ItemRenderer.class)
 public abstract class HeldItemMixin {
 
+    @Unique
+    private static final ThreadLocal<Boolean> RENDERING_LIVING_ENTITY = ThreadLocal.withInitial(() -> false);
+
     // Gets custom model for GUI model mode so the item model changes for the GUI
     @Inject(method = "getModel(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;I)Lnet/minecraft/client/render/model/BakedModel;",
             at = @At("HEAD"),
@@ -74,8 +77,9 @@ public abstract class HeldItemMixin {
     @Inject(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V",
             at = @At(value = "HEAD"),
             cancellable = true)
-    private void relignite$renderCompositeModel(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
+    private void relignite$renderCompositeOrItemEntityModel(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
         if (!stack.isEmpty()) {
+            ///  Composite model types
             if (model instanceof CompositeItemModel compositeModel) {
                 // Retrieve list of baked models from CompositeItemModel object
                 List<BakedModel> models = compositeModel.getModels();
@@ -112,6 +116,17 @@ public abstract class HeldItemMixin {
                 }
                 ci.cancel(); // Cancel rest of method for composite item models
             }
+
+            ///  For Ground or null LivingEntity types (such as ItemEntities)
+            if (RENDERING_LIVING_ENTITY.get()) return;
+
+            // For null LivingEntities (e.g. renders the ground render mode for items thrown onto ground)
+            BakedModel customModel = getCustomModel(stack, null, renderMode);
+            if (customModel != null && customModel != model) {
+                ItemRenderer self = (ItemRenderer)(Object) this;
+                self.renderItem(stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, customModel);
+                ci.cancel();
+            }
         }
     }
 
@@ -123,15 +138,50 @@ public abstract class HeldItemMixin {
                                         MatrixStack matrices, VertexConsumerProvider vertexConsumers, World world,
                                         int light, int overlay, int seed, CallbackInfo ci) {
 
-        BakedModel model = getCustomModel(item, entity, renderMode);
+        if (RENDERING_LIVING_ENTITY.get()) {
+            // Already in recursive rendering call — skip this render method call
+            return;
+        }
 
-        if (model != null) {
-            ItemRenderer self = (ItemRenderer)(Object)this;
-            // manually call vanilla rendering method with overridden model
-            self.renderItem(item, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model);
-            ci.cancel(); // skip original call
+        RENDERING_LIVING_ENTITY.set(true); // Set if it's rendering model for a valid LivingEntity
+
+        try {
+            BakedModel model = getCustomModel(item, entity, renderMode);
+
+            if (model != null) {
+                ItemRenderer self = (ItemRenderer)(Object) this;
+                // manually call vanilla rendering method with overridden model
+                self.renderItem(item, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model);
+                ci.cancel(); // skip original call
+            }
+        } finally {
+            RENDERING_LIVING_ENTITY.set(false); // Set boolean back to false if LivingEntity is null or finished rendering in this method call
         }
     }
+
+    /*
+    @Inject(
+            method = "renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/world/World;III)V",
+            at = @At("HEAD")
+    )
+    private void relignite$markEntityRenderStart(LivingEntity entity, ItemStack stack, ModelTransformationMode mode, boolean leftHanded,
+                                                 MatrixStack matrices, VertexConsumerProvider vertexConsumers, World world,
+                                                 int light, int overlay, int seed, CallbackInfo ci) {
+        RENDERING_ENTITY.set(true); // this works?
+    }
+
+     */
+
+    @Inject(
+            method = "renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/world/World;III)V",
+            at = @At("RETURN")
+    )
+    private void relignite$markEntityRenderEnd(LivingEntity entity, ItemStack stack, ModelTransformationMode mode, boolean leftHanded,
+                                               MatrixStack matrices, VertexConsumerProvider vertexConsumers, World world,
+                                               int light, int overlay, int seed, CallbackInfo ci) {
+        RENDERING_LIVING_ENTITY.set(false);
+    }
+
 
     // Get custom model from BakedModelManger's getModel from id (which is needed since we loaded the models with ModelLoadingPlugin)
     @Unique
