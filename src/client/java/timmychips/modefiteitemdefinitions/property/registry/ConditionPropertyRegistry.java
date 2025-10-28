@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class ConditionPropertyRegistry {
     private static final Map<Identifier, ConditionPropertyHandler> HANDLERS = new HashMap<>();
-    private static final String MOD_ID = ClientInitializer.MOD_NAMESPACE;
+    private static final String MOD_ID = ClientInitializer.MOD_ID;
 
     public static void init() {
         register(Identifier.of("minecraft:broken"), new BrokenBool());

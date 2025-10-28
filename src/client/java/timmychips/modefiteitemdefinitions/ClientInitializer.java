@@ -24,7 +24,7 @@ import java.util.Collection;
 
 public class ClientInitializer implements ClientModInitializer {
 
-    public static final String MOD_NAMESPACE = "modefite";
+    public static final String MOD_ID = "modefite";
 	public static final Logger LOGGER = LogUtils.getLogger();
 	public static Collection<Identifier> modelIds;
 
@@ -90,12 +90,12 @@ public class ClientInitializer implements ClientModInitializer {
 			SelectPropertyRegistry.init();
 
 			registerResources("items", manager);
-            String overrideFolderName = MOD_NAMESPACE + "_items_override"; // modefite_items_override
+            String overrideFolderName = MOD_ID + "_items_override"; // modefite_items_override
             registerResources(overrideFolderName, manager); // The resource folder where you should use modded properties
 
 			modelIds = ItemModelTypes.Registry.getAllModelDependencies();
 
-			LOGGER.info("{}: loading models", MOD_NAMESPACE.toUpperCase());
+			LOGGER.info("{}: loading models", MOD_ID.toUpperCase());
 			pluginContext.addModels(modelIds);
 		});
 	}
