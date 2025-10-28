@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "relignite",
+	"id": "modefite",
 	"version": "${version}",
-	"name": "Relignite - Model Definition Backport",
+	"name": "Modefite - Item Definition Backport",
 	"description": "Backports the items model definition system added in 1.21.4; Beta version, doesn't include everything and still uses Pommel icon.",
 	"authors": [
 		"TimmyChips"
@@ -13,20 +13,20 @@
 		"sources": "https://github.com/TimmyChips/Pommel-Held-Item-Models"
 	},
 	"license": "MIT",
-	"icon": "assets/pommel/icon.png",
+	"icon": "assets/modefite/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"timmychips.relignitemodeldefinitions.ServerInitializer"
+			"timmychips.modefiteitemdefinitions.ServerInitializer"
 		],
 		"client": [
-			"timmychips.relignitemodeldefinitions.ClientInitializer"
+			"timmychips.modefiteitemdefinitions.ClientInitializer"
 		]
 	},
 	"mixins": [
-      "relignite.mixins.json",
+      "modefite.mixins.json",
 		{
-			"config": "relignite.client.mixins.json",
+			"config": "modefite.client.mixins.json",
 			"environment": "client"
 		}
 	],

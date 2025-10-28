@@ -22,7 +22,7 @@ loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"testfabricmodt1" {
+		"modefite" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}

@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "timmychips.modefiteitemdefinitions.mixin.client",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "HandleSlotAccessor",
+    "HeldItemMixin",
+    "HeldItemSwapMixin",
+    "KeyBindingAccessor",
+    "UnlockedModelRotationDeserializerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+  ]
+}
