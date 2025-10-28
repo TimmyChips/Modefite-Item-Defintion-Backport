@@ -10,7 +10,11 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import timmychips.modefiteitemdefinitions.property.handler.SelectPropertyHandler;
+import timmychips.modefiteitemdefinitions.property.helper.EntityVariantHelper;
+import timmychips.modefiteitemdefinitions.property.resolver.ResolveRecursive;
 import timmychips.modefiteitemdefinitions.property.type.codec.SelectDefinition;
+import java.util.*;
+import static timmychips.modefiteitemdefinitions.property.helper.EntityVariantHelper.castEntityVariantComponents;
 
 /**
  * Returns a string for specified component's value
@@ -19,6 +23,7 @@ import timmychips.modefiteitemdefinitions.property.type.codec.SelectDefinition;
 public class ComponentCase implements SelectPropertyHandler {
 
     private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Set<String> WARNED_MODELS = ResolveRecursive.WARNED_MODELS;
 
     @Override
     public String getValue(ItemStack stack, LivingEntity entity, ModelTransformationMode mode, SelectDefinition.Definition definition) {
@@ -27,14 +32,25 @@ public class ComponentCase implements SelectPropertyHandler {
 
         Identifier componentId = Identifier.tryParse(component); // Parse string to id
         if (componentId == null) {
-            LOGGER.warn("Invalid component predicate ID '{}'", component);
+            String key = stack.getItem().toString() + "|" + "minecraft:component";
+            if (WARNED_MODELS.add(key)) LOGGER.warn("Invalid component predicate ID '{}'", component);
             return null;
         }
 
         ComponentType<?> componentType = Registries.DATA_COMPONENT_TYPE.get(componentId); // Retrieve component type from id
         if (componentType == null) {
-            LOGGER.warn("Unknown component predicate componentType '{}'", componentId);
-            return null;
+
+            // For entity variants; ignore warned models
+            if (EntityVariantHelper.isEntityVariant(Identifier.tryParse(component))) {
+                // Test if it can get entity variant from item stack
+                String entityVariant = castEntityVariantComponents(stack, component);
+                if (entityVariant != null) return castEntityVariantComponents(stack, component);
+            }
+            else {
+                String key = stack.getItem().toString() + "|" + "minecraft:component";
+                if (WARNED_MODELS.add(key)) LOGGER.warn("Unknown component predicate componentType: '{}'", componentId);
+                return null;
+            }
         }
 
         String str;
@@ -45,6 +61,6 @@ public class ComponentCase implements SelectPropertyHandler {
         }
         else str = String.valueOf(componentValue).toLowerCase(); // Convert value to lower case string
 
-        return str; // Return component value as string
+        return String.valueOf(Identifier.tryParse(str)); // Return component value as string in identifier format (even for text)
     }
 }

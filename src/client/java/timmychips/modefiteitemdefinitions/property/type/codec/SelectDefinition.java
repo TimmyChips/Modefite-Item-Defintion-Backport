@@ -29,7 +29,8 @@ public final class SelectDefinition {
         private static final List<Identifier> shouldParseToId = List.of(
                 Identifier.of("minecraft:context_dimension"),
                 Identifier.of("minecraft:context_entity_type"),
-                Identifier.of("minecraft:trim_material")
+                Identifier.of("minecraft:trim_material"),
+                Identifier.of("minecraft:component")
         );
 
         // Parses specific property's 'when' conditions to Identifier format.
