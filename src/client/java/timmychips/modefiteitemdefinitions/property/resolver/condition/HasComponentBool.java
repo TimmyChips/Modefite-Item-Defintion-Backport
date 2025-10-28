@@ -9,12 +9,16 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import timmychips.modefiteitemdefinitions.property.handler.ConditionPropertyHandler;
+import timmychips.modefiteitemdefinitions.property.resolver.ResolveRecursive;
 import timmychips.modefiteitemdefinitions.property.type.codec.ConditionDefinition;
+
+import java.util.Set;
 
 // Returns if item has specified component (and/or if it should ignore the default component value)
 public class HasComponentBool implements ConditionPropertyHandler {
 
     private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Set<String> WARNED_MODELS = ResolveRecursive.WARNED_MODELS;
 
     @Override
     public boolean getValue(ItemStack stack, LivingEntity entity, ConditionDefinition definition) {
@@ -26,14 +30,16 @@ public class HasComponentBool implements ConditionPropertyHandler {
         // Parse string to Identifier id
         Identifier componentId = Identifier.tryParse(component);
         if (componentId == null) {
-            LOGGER.warn("Invalid component predicate ID '{}'", component);
+            String key = stack.getItem().toString() + "|" + "minecraft:has_component";
+            if (WARNED_MODELS.add(key)) LOGGER.warn("Invalid component predicate ID '{}'", component);
             return false;
         }
 
         // Get component type from Identifier
         ComponentType<?> componentType = Registries.DATA_COMPONENT_TYPE.get(componentId);
         if (componentType == null) {
-            LOGGER.warn("Unknown component predicate componentType '{}'", componentId);
+            String key = stack.getItem().toString() + "|" + "minecraft:has_component";
+            if (WARNED_MODELS.add(key)) LOGGER.warn("Unknown component predicate componentType '{}'", componentId);
             return false;
         }
 

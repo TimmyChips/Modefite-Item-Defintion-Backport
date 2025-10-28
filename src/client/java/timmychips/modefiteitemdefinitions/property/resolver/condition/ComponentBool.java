@@ -14,15 +14,18 @@ import net.minecraft.registry.RegistryOps;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import timmychips.modefiteitemdefinitions.property.handler.ConditionPropertyHandler;
+import timmychips.modefiteitemdefinitions.property.resolver.ResolveRecursive;
 import timmychips.modefiteitemdefinitions.property.type.codec.ConditionDefinition;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 // Returns if component item sub predicate value matches specified value
 public class ComponentBool implements ConditionPropertyHandler {
 
     private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Set<String> WARNED_MODELS = ResolveRecursive.WARNED_MODELS;
 
     @Override
     public boolean getValue(ItemStack stack, LivingEntity entity, ConditionDefinition definition) {
@@ -34,14 +37,15 @@ public class ComponentBool implements ConditionPropertyHandler {
         // Parse to Identifier
         Identifier predicateId = Identifier.tryParse(predicate);
         if (predicateId == null) {
-            LOGGER.warn("Invalid component predicate ID '{}'", predicate);
+            String key = stack.getItem().toString() + "|" + "minecraft:component";if (WARNED_MODELS.add(key)) LOGGER.warn("Invalid component predicate ID '{}'", predicate);
             return false;
         }
 
         // Retrieve item sub predicate type from ID
         ItemSubPredicate.Type<?> type = Registries.ITEM_SUB_PREDICATE_TYPE.get(predicateId);
         if (type == null) {
-            LOGGER.warn("Unknown component predicate type '{}'", predicateId);
+            String key = stack.getItem().toString() + "|" + "minecraft:component";
+            if (WARNED_MODELS.add(key)) LOGGER.warn("Unknown component predicate type '{}'", predicateId);
             return false;
         }
 
@@ -59,12 +63,14 @@ public class ComponentBool implements ConditionPropertyHandler {
             if (parsed.isPresent()) {
                 return parsed.get().test(stack);
             } else {
-                LOGGER.warn("Failed to decode predicate value for '{}': {}", predicateId, value);
+                String key = stack.getItem().toString() + "|" + "minecraft:component";
+                if (WARNED_MODELS.add(key)) LOGGER.warn("Failed to decode predicate value for '{}': {}", predicateId, value);
                 return false;
             }
 
         } catch (Exception e) {
-            LOGGER.error("Error parsing component predicate JSON for '{}': {}", predicateId, value, e);
+            String key = stack.getItem().toString() + "|" + "minecraft:component";
+            if (WARNED_MODELS.add(key)) LOGGER.error("Error parsing component predicate JSON for '{}': {}", predicateId, value, e);
             return false;
         }
     }
