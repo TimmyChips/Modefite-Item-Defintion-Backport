@@ -117,15 +117,19 @@ public abstract class HeldItemMixin {
                 ci.cancel(); // Cancel rest of method for composite item models
             }
 
-            ///  For Ground or null LivingEntity types (such as ItemEntities)
-            if (RENDERING_LIVING_ENTITY.get()) return;
+            else {
+                ///  For Ground or null LivingEntity types (such as ItemEntities)
+                if (RENDERING_LIVING_ENTITY.get()) return;
 
-            // For null LivingEntities (e.g. renders the ground render mode for items thrown onto ground)
-            BakedModel customModel = getCustomModel(stack, null, renderMode);
-            if (customModel != null && customModel != model) {
-                ItemRenderer self = (ItemRenderer)(Object) this;
-                self.renderItem(stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, customModel);
-                ci.cancel();
+                if (renderMode == ModelTransformationMode.GROUND) {
+                    // For null LivingEntities (e.g. renders the ground render mode for items thrown onto ground)
+                    BakedModel customModel = getCustomModel(stack, null, renderMode);
+                    if (customModel != null && customModel != model) {
+                        ItemRenderer self = (ItemRenderer) (Object) this;
+                        self.renderItem(stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, customModel);
+                        ci.cancel();
+                    }
+                }
             }
         }
     }

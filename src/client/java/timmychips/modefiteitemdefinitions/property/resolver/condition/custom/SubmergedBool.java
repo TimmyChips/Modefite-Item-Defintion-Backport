@@ -1,5 +1,7 @@
 package timmychips.modefiteitemdefinitions.property.resolver.condition.custom;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
@@ -8,6 +10,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import timmychips.modefiteitemdefinitions.ClientInitializer;
 import timmychips.modefiteitemdefinitions.property.handler.ConditionPropertyHandler;
 import timmychips.modefiteitemdefinitions.property.type.codec.ConditionDefinition;
 
@@ -17,19 +20,26 @@ public class SubmergedBool implements ConditionPropertyHandler {
     @Override
     public boolean getValue(ItemStack stack, LivingEntity entity, ConditionDefinition definition) {
         Identifier fluid = definition.submergedFluid(); // is minecraft:water by default
-        return submergedInFluidCheck(entity, fluid);
+        return submergedInFluidCheck(entity, stack, fluid);
     }
 
-    private static boolean submergedInFluidCheck(LivingEntity entity, Identifier fluidIdToMatch) {
-        if (entity != null) {
-            Vec3d eyePos = entity.getEyePos();
+    private static boolean submergedInFluidCheck(LivingEntity livingEntity, ItemStack stack, Identifier fluidIdToMatch) {
+
+        Entity holder = livingEntity == null ? stack.getHolder() : livingEntity; // Get the stack holding entity (ItemEntity) if livingEntity is null
+
+        if (holder != null) {
+            Vec3d eyePos;
+            if (holder instanceof LivingEntity) eyePos = holder.getEyePos();
+            else eyePos = holder.getPos();
+
             BlockPos fluidBlock = BlockPos.ofFloored(eyePos);
-            FluidState fluidState = entity.getWorld().getFluidState(fluidBlock); // Get fluidState entity is submerged in
+            FluidState fluidState = holder.getWorld().getFluidState(fluidBlock); // Get fluidState entity is submerged in
 
             if (!fluidState.isEmpty()) {
                 Fluid fluid = fluidState.getFluid();
-                Identifier fluidId = Registries.FLUID.getId(fluid); // Get id of fluid
-                return fluidId.equals(fluidIdToMatch); // Matches specified fluid from json file
+                Fluid targetToMatch = Registries.FLUID.get(fluidIdToMatch); // Get identifier to match as Fluid object
+
+                return fluid.matchesType(targetToMatch); // Matches specified fluid from json file
             }
         }
         return false;
