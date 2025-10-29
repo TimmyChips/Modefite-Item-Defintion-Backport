@@ -1,93 +1,45 @@
-<div align=center><img src="./README_assets/pommel_modIcon.png" alt="Pommel Icon" width="250"/>
+## Modefite - Item Definition Backport
+***
 
+Modefite is a mod that backports the new Items Model Definition system (also called the "Items" system) that was introduced in 1.21.4 to older versions of Minecraft.
+
+With Modefite, you can use your favorite resource packs designed for newer versions for their extra customizability.
 <br>
 
-<h1>Pommel - Held Item Models</h1></div>
+### FAQ
+***
+* Main missing features not implemented yet include the: `special`, `bundle/selected_item`, and the `model tint source` types.
+* You can see the full list of differences from the official 1.21.4+ system [here](https://github.com/TimmyChips/Modefite-Item-Defintion-Backport/wiki#differences-from-1214).
+* Some resource packs use core shaders that may be incompatible with your version of the game! You may need to delete the core shaders folder for a pack if you get the error, "*Resource reload failed*" when enabling.
 
-<br>
+##### For Resource Pack Makers
 
-<h3 align=center>
-  <a href="https://modrinth.com/mod/pommel-held-item-models"><img src="./README_assets/modrinth_logo.svg" alt="Modrinth Logo" width="32"/>
-  <br>
-  Modrinth Page</a>
-</h3>
+* Modefite adds some new properties, fields, and a new resource folder that can be used. More info available [here](https://github.com/TimmyChips/Modefite-Item-Defintion-Backport/wiki#custom-additions).
+* Use any custom properties/fields in `assets/<minecraft_or_modid>/modefite_items_override` in your resource pack as vanilla Minecraft 1.21.4+ will render a missing model on any unknown properties/fields.
+* If you haven't seen it already, the documentation on the items model definition system can be seen on the [Minecraft wiki](https://minecraft.wiki/w/Items_model_definition).
+* Any unknown properties or fields will be ignored and won't cause any missing models with Modefite.
+* See the `latest.log` file for any potential errors you run into!
+<br><br><br>
 
-<br>
+* Modefite is not a one-to-one version of the vanilla items model definition system and hopefully there aren't any breaking changes!
+* Please report any issues, bugs, or feature requests on the [GitHub issue tracker!](https://github.com/TimmyChips/Modefite-Item-Defintion-Backport/issues)
+<br><br>
 
-<h2>What is Pommel?</h2>
+### Why Modefite?
+***
+Before 1.21.4 released, I created [Pommel](https://modrinth.com/mod/pommel-held-item-models) as a way to have my resource pack have separate held models in the hand compared to the inventory. 1.21.4 and 1.21.5 introduced the new items system that gave resource pack creators more freedom and customizability, which essentially made the main function of the mod, obsolete. Though it does have a couple of features still missing in the latest release of Minecraft.
 
-<p>Pommel is a Fabric mod that lets resourcepacks replace the models for the held version of items&mdash;just like the spyglass and the trident&mdash;letting you customize what your item looks in your hand. Want to make a 3d model of the mace in your hand, a fiery greatsword, or an ancient magical staff while still retaining the original item? With Pommel, all that can be achieved!</p>
-<p>Works for modded items as well!</p>
+To my surprise, Pommel ended up being used by many resource pack creators afterward to backport their resource pack to 1.21.1 and below. Together with mods like, [CIT Resewn](https://modrinth.com/mod/cit-resewn), [Eating Animation](https://modrinth.com/mod/eating-animation), and [EMF](https://modrinth.com/mod/entity-model-features)/[ETF](https://modrinth.com/mod/entitytexturefeatures), several of the features could be refactored to work in these versions. Though it was cumbersome and difficult, and many features were missing. I updated Pommel to add some of these missing features from 1.21.4, but a random question in a conversation with someone was, "What if you took a look at the 'items' system [and made that a mod] for resource packs?" 
 
-<br>
+And thus, Modefite was born.
+<br><br>
 
+### Future Plans
+***
+The main plan is to port the mod to 1.20.1. And possibly as well as for 1.21.2 and 1.21.3. Other main plans are bug fixing and making sure items model definition resource packs work with Modefite. 
 
-<h2>For Resource Pack Creators</h2>
+Another goal is to add the `special` type to Modefite; although the priority is lower since I don't believe many resource pack makers use this feature much. The types, `oversized_in_gui` and `swap_animation_scale` are in similar positions, as well as `model tint source` types.
 
-<p>Pommel replaces the held version of an item by a model you specify with the new model item predicate, <code>pommel:is_held</code>. For example, by modifying the model, <code>iron_pickaxe.json</code>, you can tell the mod what model should be displayed when held.</p>
+Type, `budle/selected_item` will most likely be added to the 1.21.2/1.21.3 version of Modefite, as the ability to do this with bundles was introduced in those versions. 
 
-<p>The held model provided as well as the textures for it can be wherever as long as it's specified by the item model json file.</p>
-
-
-<h3 id="jsonExample">JSON Example:</h3>
-
-```json
-{
-  "parent": "item/handheld",
-  "textures": {
-    "layer0": "minecraft:item/2d_model_texture"
-  },
-  "overrides": [
-    { "predicate": { "pommel:is_held": 1.0 }, "model": "minecraft:item/my_held_item" }
-  ]
-}
-```
-
-<p>You may also specify file directories for held models for organizing, as well as changing the parent model to something else.</p>
-
-<br>
-
-<h2>Questions</h2>
-<h4>Q: Does this work with CIT [Custom Item Textures]?</h4>
-<dl>
-    <dd>A: CIT Resewn nor Optifine hasn't updated to 1.21 yet, but I am guessing yes, as long as you have CIT replace the item with a model. CIT lets you replace an item's model, so Pommel should still allow you to have custom held models.</dd>
-</dl>
-
-<h4>Q: Does this work with Vanilla Minecraft's item predicates such as Custom Model Data or bow Pulling?</h4>
-<dl>
-    <dd>A: Yes, but be sure you specify <code>pommel:is_held</code> for the <code>custom_model_data</code> models as well.</dd>
-    <br>
-    <dd>Here is an example of using vanilla item predicates and held item models:</dd>
-    <br>
-
-<dd>
-
-```json
-{
-  "parent": "item/handheld",
-  "textures": {
-    "layer0": "item/base_item"
-  },
-  "overrides": [
-    { "predicate": { "pommel:is_held": 1.0 }, "model": "minecraft:item/base_item_held" },
-	{ "predicate": { "custom_model_data": 1 }, "model": "minecraft:item/custom_item" },
-	{ "predicate": { "custom_model_data": 1, "pommel:is_held": 1.0 }, "model": "minecraft:item/custom_item_held" }
-  ]
-}
-```
-
-</dd>
-
-</dl>
-
-<br>
-
-<h4>Q: How would I replace a modded item's held model?</h4>
-<dl>
-    <dd>A: Same json hierarchy as in the <a href="#jsonExample">JSON example</a>, but instead of the id <code>minecraft</code> in front, it would be <code>&lt;mod_id&gt</code>.</dd>
-</dl>
-
-<h4>Q: I'm having issues getting my held model to work. Where can I go for troubleshooting?</h4>
-<dl>
-    <dd>A: First check if your JSON code doesn't have errors, as it's pretty easy to accidently screw up JSON code. I use <a href="https://jsonlint.com/">JSONLint</a> for validating my JSON, but most IDEs will also check for errors. If you're still having issues, honestly the best way to get support is to reach out to me on Discord. My username is <i>timmychips</i> so shoot me a message there if you need help!</dd>
-</dl>
+Eventually I'd like to perhaps add some more custom properties for resource pack creators, and port Modefite and these properties to newer versions so creators can use them.
