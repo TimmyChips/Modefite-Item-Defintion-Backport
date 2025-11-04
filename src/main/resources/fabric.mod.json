@@ -12,7 +12,7 @@
 		"issues": "https://github.com/TimmyChips/Modefite-Item-Defintion-Backport/issues",
 		"sources": "https://github.com/TimmyChips/Modefite-Item-Defintion-Backport"
 	},
-	"license": "MIT",
+	"license": "GPL-3.0",
 	"icon": "assets/modefite/icon.png",
 	"environment": "*",
 	"entrypoints": {
