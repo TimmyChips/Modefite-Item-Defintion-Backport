@@ -3,14 +3,14 @@
 	"id": "modefite",
 	"version": "${version}",
 	"name": "Modefite - Item Definition Backport",
-	"description": "Backports the items model definition system added in 1.21.4; Beta version, doesn't include everything and still uses Pommel icon.",
+	"description": "Backports the items model definition system added in 1.21.4",
 	"authors": [
 		"TimmyChips"
 	],
 	"contact": {
-		"homepage": "https://modrinth.com/mod/pommel-held-item-models",
-		"issues": "https://github.com/TimmyChips/Pommel-Held-Item-Models",
-		"sources": "https://github.com/TimmyChips/Pommel-Held-Item-Models"
+		"homepage": "https://modrinth.com/mod/modefite-item-definition-backport",
+		"issues": "https://github.com/TimmyChips/Modefite-Item-Defintion-Backport/issues",
+		"sources": "https://github.com/TimmyChips/Modefite-Item-Defintion-Backport"
 	},
 	"license": "MIT",
 	"icon": "assets/modefite/icon.png",
