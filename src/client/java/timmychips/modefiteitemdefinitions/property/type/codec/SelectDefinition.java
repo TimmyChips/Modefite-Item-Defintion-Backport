@@ -22,15 +22,16 @@ public final class SelectDefinition {
             @Nullable String component
     ) implements ItemModelDefinition {
 
+
         /**
          * List of property identifiers if it should cast the 'when' condition String to an Identifier format.
          * <p>For example, items model definition files with "minecraft:context_entity_type" will have the 'when' case "zombie" converted to "minecraft:zombie"
          */
         private static final List<Identifier> shouldParseToId = List.of(
-                Identifier.of("minecraft:context_dimension"),
-                Identifier.of("minecraft:context_entity_type"),
-                Identifier.of("minecraft:trim_material"),
-                Identifier.of("minecraft:component")
+                new Identifier("minecraft:context_dimension"),
+                new Identifier("minecraft:context_entity_type"),
+                new Identifier("minecraft:trim_material"),
+                new Identifier("minecraft:component")
         );
 
         // Parses specific property's 'when' conditions to Identifier format.
@@ -70,7 +71,7 @@ public final class SelectDefinition {
                     )));
         }
 
-        public static final Identifier TYPE = Identifier.of("minecraft:select");
+        public static final Identifier TYPE = new Identifier("minecraft:select");
 
         @Override
         public MapCodec<? extends ItemModelDefinition> getCodec() {
@@ -79,7 +80,7 @@ public final class SelectDefinition {
 
         @Override
         public Identifier expectedType() {
-            return Identifier.of("minecraft:select");
+            return new Identifier("minecraft:select");
         }
     }
 

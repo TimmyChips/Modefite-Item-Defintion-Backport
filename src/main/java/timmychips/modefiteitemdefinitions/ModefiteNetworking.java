@@ -11,24 +11,21 @@ import java.util.UUID;
 import static timmychips.modefiteitemdefinitions.ServerInitializer.MOD_ID;
 
 public class ModefiteNetworking {
-    public static final Identifier USE_KEY_C2S_ID = new Identifier(MOD_ID, "use_key_c2s");
-    public static final Identifier USE_KEY_S2C_ID = new Identifier(MOD_ID, "use_key_s2c");
+    public static void registerPayloads() {
+
+    }
 
     public static void useKeyGlobalReceiver() {
-        ServerPlayNetworking.registerGlobalReceiver(USE_KEY_C2S_ID, (server, player, handler, buf, responseSender) -> {
-            UUID senderUuid = buf.readUuid();
-            ItemStack stack = buf.readItemStack();
-            boolean isUsing = buf.readBoolean();
+        ServerPlayNetworking.registerGlobalReceiver(UseKeyC2SPayload.TYPE, (packet, player, responseSender) -> {
+            UUID senderUuid = packet.playerUuid();
+            ItemStack stack = packet.itemStack();
+            boolean isUsing = packet.isUsing();
 
-            // Now send to other players
-            PacketByteBuf sendBuf = new PacketByteBuf(io.netty.buffer.Unpooled.buffer());
-            sendBuf.writeUuid(senderUuid);
-            sendBuf.writeItemStack(stack);
-            sendBuf.writeBoolean(isUsing);
+            UseKeyC2SPayload broadcastPacket = new UseKeyC2SPayload(senderUuid, stack, isUsing);
 
             for (ServerPlayerEntity otherPlayer : player.server.getPlayerManager().getPlayerList()) {
                 if (!otherPlayer.getUuid().equals(senderUuid)) {
-                    ServerPlayNetworking.send(otherPlayer, USE_KEY_S2C_ID, sendBuf);
+                    ServerPlayNetworking.send(otherPlayer, broadcastPacket);
                 }
             }
         });
