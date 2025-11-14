@@ -31,7 +31,7 @@ public class CompassFloat implements RangePropertyHandler {
         LODESTONE("lodestone"),
         SPAWN("spawn"),
         RECOVERY("recovery");
-
+        
         private final String name;
 
         CompassTarget(String name) {
