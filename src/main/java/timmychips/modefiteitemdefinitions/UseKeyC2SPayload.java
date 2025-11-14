@@ -1,30 +1,32 @@
 package timmychips.modefiteitemdefinitions;
 
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Uuids;
 
 import java.util.UUID;
 
 import static timmychips.modefiteitemdefinitions.ServerInitializer.MOD_ID;
 
-public record UseKeyC2SPayload(UUID playerUuid, ItemStack itemStack, boolean isUsing) implements CustomPayload {
-    public static final Identifier ID = Identifier.of(MOD_ID, "use_key");
-    public static final CustomPayload.Id<UseKeyC2SPayload> PACKET_ID = new CustomPayload.Id<>(ID);
+public record UseKeyC2SPayload(UUID playerUuid, ItemStack itemStack, boolean isUsing) implements FabricPacket {
+    public static final Identifier ID = new Identifier(MOD_ID, "use_key");
+    public static final PacketType<UseKeyC2SPayload> TYPE = PacketType.create(ID, UseKeyC2SPayload::new);
 
-    public static final PacketCodec<RegistryByteBuf, UseKeyC2SPayload> CODEC = PacketCodec.tuple(
-            Uuids.PACKET_CODEC, UseKeyC2SPayload::playerUuid,
-            ItemStack.PACKET_CODEC, UseKeyC2SPayload::itemStack,
-            PacketCodecs.BOOL, UseKeyC2SPayload::isUsing,
-            UseKeyC2SPayload::new
-    );
+    public UseKeyC2SPayload(PacketByteBuf buf) {
+        this(buf.readUuid(), buf.readItemStack(), buf.readBoolean());
+    }
 
     @Override
-    public CustomPayload.Id<? extends CustomPayload> getId() {
-        return PACKET_ID;
+    public void write(PacketByteBuf buf) {
+        buf.writeUuid(playerUuid);
+        buf.writeItemStack(itemStack);
+        buf.writeBoolean(isUsing);
+    }
+
+    @Override
+    public PacketType<?> getType() {
+        return TYPE;
     }
 }
