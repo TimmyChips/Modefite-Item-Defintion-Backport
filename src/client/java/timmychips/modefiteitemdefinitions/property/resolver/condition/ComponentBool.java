@@ -8,12 +8,13 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.predicate.item.ItemSubPredicate;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryOps;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import timmychips.modefiteitemdefinitions.property.handler.ConditionPropertyHandler;
+import timmychips.modefiteitemdefinitions.property.helper.NBTItemComponents;
 import timmychips.modefiteitemdefinitions.property.resolver.ResolveRecursive;
 import timmychips.modefiteitemdefinitions.property.type.codec.ConditionDefinition;
 
@@ -40,7 +41,9 @@ public class ComponentBool implements ConditionPropertyHandler {
             String key = stack.getItem().toString() + "|" + "minecraft:component";if (WARNED_MODELS.add(key)) LOGGER.warn("Invalid component predicate ID '{}'", predicate);
             return false;
         }
+        NbtElement element = new NBTItemComponents().getNBTComponent(stack, String.valueOf(predicateId));
 
+        /*
         // Retrieve item sub predicate type from ID
         ItemSubPredicate.Type<?> type = Registries.ITEM_SUB_PREDICATE_TYPE.get(predicateId);
         if (type == null) {
@@ -73,5 +76,8 @@ public class ComponentBool implements ConditionPropertyHandler {
             if (WARNED_MODELS.add(key)) LOGGER.error("Error parsing component predicate JSON for '{}': {}", predicateId, value, e);
             return false;
         }
+
+         */
+        return false;
     }
 }

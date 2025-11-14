@@ -1,9 +1,11 @@
 package timmychips.modefiteitemdefinitions;
 
 import com.mojang.logging.LogUtils;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
@@ -11,11 +13,12 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import org.slf4j.Logger;
 import timmychips.modefiteitemdefinitions.objects.PlayerHeldItem;
-
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -63,27 +66,36 @@ public class UseKeyTracker {
                 Item itemUsed = user.getStackInHand(hand).getItem();
                 ItemStack defaultStack = itemUsed.getDefaultStack();
 
+                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                buf.writeUuid(playerUuid);
+                buf.writeItemStack(defaultStack);
+                buf.writeBoolean(true);
+
                 if (!defaultStack.isEmpty()) {
-                    UseKeyC2SPayload payload = new UseKeyC2SPayload(playerUuid, defaultStack, true);
-                    ClientPlayNetworking.send(payload); // Sends payload to server
+                    for (PlayerEntity otherPlayer : world.getPlayers()) {
+                        if (!otherPlayer.getUuid().equals(playerUuid)) {
+                            ServerPlayNetworking.send((ServerPlayerEntity) otherPlayer, ModefiteNetworking.USE_KEY_S2C_ID, buf);
+                        }
+                    }
                 }
             }
 
-			return TypedActionResult.pass(user.getStackInHand(hand)); // Pass to return that we did the event
-		});
+            return TypedActionResult.pass(user.getStackInHand(hand)); // Pass to return that we did the event
+        });
     }
 
     // Receives packet of other player pressing the use key from the server for other clients
     public static void receiveUseKeyPacket() {
-        ClientPlayNetworking.registerGlobalReceiver(UseKeyS2CPayload.PACKET_ID, (payload, context) -> {
-            MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayNetworking.registerGlobalReceiver(ModefiteNetworking.USE_KEY_S2C_ID, (client, handler, buf, responseSender) -> {
+            UUID senderUuid = buf.readUuid();
+            ItemStack itemStack = buf.readItemStack();
+            boolean isUsing = buf.readBoolean();
+
             if (client.world != null) {
                 client.execute(() -> {
-                    PlayerEntity sender = client.world.getPlayerByUuid(payload.playerUuid());
-                    if (sender != null) {
-                        if (payload.isUsing()) {
-                            itemMap.put(sender, new PlayerHeldItem(payload.itemStack().copy()));
-                        }
+                    PlayerEntity sender = client.world.getPlayerByUuid(senderUuid);
+                    if (sender != null && isUsing) {
+                        itemMap.put(sender, new PlayerHeldItem(itemStack));
                     }
                 });
             }
@@ -126,7 +138,7 @@ public class UseKeyTracker {
 //            Hand hand = clientPlayer.getActiveHand();
 //            ItemStack currentStack = clientPlayer.getStackInHand(hand); // Only actually does it for player's main hand :(
 
-            ItemStack currentStack = clientPlayer.getMainHandStack().isEmpty() ? clientPlayer.getOffHandStack() : clientPlayer.getMainHandStack();
+            ItemStack currentStack = livingEntity.getMainHandStack().isEmpty() ? livingEntity.getOffHandStack() : livingEntity.getMainHandStack();
 
             return ItemStack.areEqual(currentStack,stack);
         }
