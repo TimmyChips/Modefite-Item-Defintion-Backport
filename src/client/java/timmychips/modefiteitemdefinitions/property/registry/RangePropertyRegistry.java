@@ -15,16 +15,16 @@ public class RangePropertyRegistry {
 
     // Register each property
     public static void init() {
-        register(Identifier.of("minecraft:bundle/fullness"), new BundleFullnessFloat());
-        register(Identifier.of("minecraft:compass"), new CompassFloat());
-        register(Identifier.of("minecraft:cooldown"), new CooldownFloat());
-        register(Identifier.of("minecraft:count"), new CountFloat());
-        register(Identifier.of("minecraft:crossbow/pull"), new CrossbowPullFloat());
-        register(Identifier.of("minecraft:damage"), new DamageFloat());
-        register(Identifier.of("minecraft:time"), new ClockTimeFloat());
-        register(Identifier.of("minecraft:use_cycle"), new UseCycleFloat());
-        register(Identifier.of("minecraft:use_duration"), new UseDurationFloat());
-        register(Identifier.of("minecraft:custom_model_data"), new CustomModelDataFloat());
+        register(new Identifier("minecraft:bundle/fullness"), new BundleFullnessFloat());
+        register(new Identifier("minecraft:compass"), new CompassFloat());
+        register(new Identifier("minecraft:cooldown"), new CooldownFloat());
+        register(new Identifier("minecraft:count"), new CountFloat());
+        register(new Identifier("minecraft:crossbow/pull"), new CrossbowPullFloat());
+        register(new Identifier("minecraft:damage"), new DamageFloat());
+        register(new Identifier("minecraft:time"), new ClockTimeFloat());
+        register(new Identifier("minecraft:use_cycle"), new UseCycleFloat());
+        register(new Identifier("minecraft:use_duration"), new UseDurationFloat());
+        register(new Identifier("minecraft:custom_model_data"), new CustomModelDataFloat());
     }
 
     private static void register(Identifier id, RangePropertyHandler handler) {

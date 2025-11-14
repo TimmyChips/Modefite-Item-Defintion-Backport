@@ -10,7 +10,7 @@ public record ModelDefinition(Identifier type, Identifier model) implements Item
             Identifier.CODEC.fieldOf("model").forGetter(ModelDefinition::model)
     ).apply(instance, ModelDefinition::new));
 
-    public static final Identifier TYPE = Identifier.of("minecraft:model");
+    public static final Identifier TYPE = new Identifier("minecraft:model");
 
     @Override
     public MapCodec<? extends ItemModelDefinition> getCodec() {

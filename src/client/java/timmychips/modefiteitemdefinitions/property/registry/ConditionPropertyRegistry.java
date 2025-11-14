@@ -18,22 +18,22 @@ public class ConditionPropertyRegistry {
     private static final String MOD_ID = ClientInitializer.MOD_ID;
 
     public static void init() {
-        register(Identifier.of("minecraft:broken"), new BrokenBool());
-        register(Identifier.of("minecraft:carried"), new CarriedBool());
-        register(Identifier.of("minecraft:component"), new ComponentBool());
-        register(Identifier.of("minecraft:custom_model_data"), new CustomModelDataBool());
-        register(Identifier.of("minecraft:damaged"), new DamagedBool());
-        register(Identifier.of("minecraft:extended_view"), new ExtendedViewBool());
-        register(Identifier.of("minecraft:fishing_rod/cast"), new FishingRodCastBool());
-        register(Identifier.of("minecraft:has_component"), new HasComponentBool());
-        register(Identifier.of("minecraft:keybind_down"), new KeybindDownBool());
-        register(Identifier.of("minecraft:selected"), new SelectedBool());
-        register(Identifier.of("minecraft:using_item"), new UsingItemBool());
-        register(Identifier.of("minecraft:view_entity"), new ViewEntityBool());
+        register(new Identifier("minecraft:broken"), new BrokenBool());
+        register(new Identifier("minecraft:carried"), new CarriedBool());
+        register(new Identifier("minecraft:component"), new ComponentBool());
+        register(new Identifier("minecraft:custom_model_data"), new CustomModelDataBool());
+        register(new Identifier("minecraft:damaged"), new DamagedBool());
+        register(new Identifier("minecraft:extended_view"), new ExtendedViewBool());
+        register(new Identifier("minecraft:fishing_rod/cast"), new FishingRodCastBool());
+        register(new Identifier("minecraft:has_component"), new HasComponentBool());
+        register(new Identifier("minecraft:keybind_down"), new KeybindDownBool());
+        register(new Identifier("minecraft:selected"), new SelectedBool());
+        register(new Identifier("minecraft:using_item"), new UsingItemBool());
+        register( new Identifier("minecraft:view_entity"), new ViewEntityBool());
 
         // Custom, modded Properties
-        register(Identifier.of(MOD_ID,"hovered_item"), new HoveredItemBool());
-        register(Identifier.of(MOD_ID,"submerged"), new SubmergedBool());
+        register(new Identifier(MOD_ID,"hovered_item"), new HoveredItemBool());
+        register(new Identifier(MOD_ID,"submerged"), new SubmergedBool());
     }
 
     private static void register(Identifier id, ConditionPropertyHandler handler) {

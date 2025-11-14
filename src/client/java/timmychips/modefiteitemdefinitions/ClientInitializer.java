@@ -53,7 +53,7 @@ public class ClientInitializer implements ClientModInitializer {
                             .ifPresent(pair -> {
                                 // Clean up path to match item ID (remove "items/" and ".json")
                                 String cleanPath = id.getPath().substring((folderName + "/").length(), id.getPath().length() - ".json".length());
-                                Identifier itemId = Identifier.of(id.getNamespace(), cleanPath);
+                                Identifier itemId = new Identifier(id.getNamespace(), cleanPath);
 
                                 ItemModelDefinition definition = pair.getFirst();
                                 ItemModelRootDefinition rootDef = new ItemModelRootDefinition(definition, handAnimationOnSwap, oversizedInGui, swapAnimationScale);

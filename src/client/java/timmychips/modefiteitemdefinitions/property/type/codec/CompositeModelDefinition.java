@@ -13,7 +13,7 @@ public record CompositeModelDefinition(Identifier type, List<ItemModelDefinition
             ItemModelTypes.CODEC.listOf().fieldOf("models").forGetter(CompositeModelDefinition::models)
     ).apply(instance, CompositeModelDefinition::new));
 
-    public static final Identifier TYPE = Identifier.of("minecraft:composite");
+    public static final Identifier TYPE = new Identifier("minecraft:composite");
 
     @Override
     public MapCodec<? extends ItemModelDefinition> getCodec() {

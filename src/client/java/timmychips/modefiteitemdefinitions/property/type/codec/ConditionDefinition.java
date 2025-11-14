@@ -57,12 +57,12 @@ public record ConditionDefinition(
                         optPredicate.orElse(null), optValue.orElse(null),
                         optComponent.orElse(null), optIgnoreDef.orElse(false),
                         optKeybind.orElse(null),
-                        optSubmergedFluid.orElse(Identifier.of("minecraft:water")),
+                        optSubmergedFluid.orElse(new Identifier("minecraft:water")),
                         onTrue, onFalse)
         ));
     }
 
-    public static final Identifier TYPE = Identifier.of("minecraft:condition");
+    public static final Identifier TYPE = new Identifier("minecraft:condition");
 
     @Override
     public MapCodec<? extends ItemModelDefinition> getCodec() {
