@@ -114,7 +114,7 @@ public class ComponentType<T> {
     public static final ComponentType<Integer> DAMAGE = register("minecraft:damage", DataComponentTypes.DAMAGE, 3);
     public static final ComponentType<Integer> MAX_DAMAGE = register("minecraft:max_damage", DataComponentTypes.MAX_DAMAGE, 3);
     public static final ComponentType<Boolean> UNBREAKABLE = register("minecraft:unbreakable", DataComponentTypes.UNBREAKABLE, 1);
-
+    public static final ComponentType<NbtCompound> BLOCK_STATE = register("minecraft:block_state", DataComponentTypes.BLOCK_STATE, 10);
     public static final ComponentType<NbtElement> ENCHANTMENTS = register("minecraft:enchantments", DataComponentTypes.ENCHANTMENTS, 9);
     public static final ComponentType<NbtElement> STORED_ENCHANTMENTS = register("minecraft:stored_enchantments", DataComponentTypes.STORED_ENCHANTMENTS, 9);
 

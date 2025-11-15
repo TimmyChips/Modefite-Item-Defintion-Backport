@@ -13,7 +13,7 @@ public class CrossbowPullFloat implements RangePropertyHandler {
         if (user == null) return 0.0F;
         else if (CrossbowItem.isCharged(stack)) return 0.0F;
         else {
-            int pull_time = CrossbowItem.getPullTime(stack, user);
+            int pull_time = CrossbowItem.getPullTime(stack); // int pull_time = CrossbowItem.getPullTime(stack, user);
             return (float) UseDurationFloat.getTicksUsed(stack, user) / pull_time;
 //            return (float) (stack.getMaxUseTime(user) - user.getItemUseTimeLeft()) / pull_time;
         }

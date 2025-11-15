@@ -38,7 +38,7 @@ public class ComponentCase implements SelectPropertyHandler {
             return null;
         }
 
-        ComponentType<?> componentType = Registries.DATA_COMPONENT_TYPE.get(componentId); // Retrieve component type from id
+        ComponentType<?> componentType = ComponentType.get(componentId); // Retrieve component type from id
         if (componentType == null) {
 
             // For entity variants; ignore warned models

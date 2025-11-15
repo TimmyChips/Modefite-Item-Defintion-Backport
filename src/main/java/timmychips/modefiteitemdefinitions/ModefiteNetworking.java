@@ -11,8 +11,10 @@ import java.util.UUID;
 import static timmychips.modefiteitemdefinitions.ServerInitializer.MOD_ID;
 
 public class ModefiteNetworking {
-    public static void registerPayloads() {
+    public static final Identifier USE_KEY_S2C_ID = new Identifier(MOD_ID, "use_key_sync");
 
+    public static void registerPayloads() {
+        //WIP NOT DONE REMOVED ERRORS FOR TEST PURPOSES
     }
 
     public static void useKeyGlobalReceiver() {
@@ -21,7 +23,7 @@ public class ModefiteNetworking {
             ItemStack stack = packet.itemStack();
             boolean isUsing = packet.isUsing();
 
-            UseKeyC2SPayload broadcastPacket = new UseKeyC2SPayload(senderUuid, stack, isUsing);
+            UseKeyS2CPayload broadcastPacket = new UseKeyS2CPayload(senderUuid, stack, isUsing);
 
             for (ServerPlayerEntity otherPlayer : player.server.getPlayerManager().getPlayerList()) {
                 if (!otherPlayer.getUuid().equals(senderUuid)) {
