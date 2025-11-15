@@ -5,6 +5,7 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
+import timmychips.modefiteitemdefinitions.comp.GameOptionsHelper;
 import timmychips.modefiteitemdefinitions.property.handler.SelectPropertyHandler;
 import timmychips.modefiteitemdefinitions.property.type.codec.SelectDefinition;
 
@@ -15,7 +16,7 @@ import timmychips.modefiteitemdefinitions.property.type.codec.SelectDefinition;
 public class MainHandCase implements SelectPropertyHandler {
     @Override
     public String getValue(ItemStack stack, LivingEntity entity, ModelTransformationMode mode, SelectDefinition.Definition definition) {
-        Arm mainArm = MinecraftClient.getInstance().options.getSyncedOptions().mainArm();
+        Arm mainArm = GameOptionsHelper.getMainArm(MinecraftClient.getInstance().options);
         if (entity != null) mainArm = entity.getMainArm();
 
         return mainArm.toString().toLowerCase();

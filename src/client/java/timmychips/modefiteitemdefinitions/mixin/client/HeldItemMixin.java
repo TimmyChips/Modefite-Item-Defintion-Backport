@@ -27,10 +27,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import timmychips.modefiteitemdefinitions.bakedmodels.CompositeItemModel;
 import timmychips.modefiteitemdefinitions.property.type.ItemModelTypes;
-
 import java.util.List;
 import java.util.Optional;
 
+import static timmychips.modefiteitemdefinitions.comp.MatrixStackAddon.copy;
 import static timmychips.modefiteitemdefinitions.property.resolver.ItemModelResolver.resolveModel;
 
 // Mixin injects into target ItemRenderer vanilla class
@@ -99,7 +99,7 @@ public abstract class HeldItemMixin {
 
                             vertexConsumer = getDirectItemGlintConsumer(vertexConsumers, renderLayer, true, stack.hasGlint());
 
-                            MatrixStack.Entry entry = matrices.peek().copy();
+                            MatrixStack.Entry entry = copy(matrices.peek());
                             if (renderMode == ModelTransformationMode.GUI) {
                                 MatrixUtil.scale(entry.getPositionMatrix(), 0.5F);
                             } else if (renderMode.isFirstPerson()) {

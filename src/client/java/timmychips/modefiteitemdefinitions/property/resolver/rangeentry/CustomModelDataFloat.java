@@ -9,6 +9,7 @@ import timmychips.modefiteitemdefinitions.property.handler.RangePropertyHandler;
 import timmychips.modefiteitemdefinitions.property.resolver.ResolveRecursive;
 import timmychips.modefiteitemdefinitions.property.type.codec.RangeDispatchDefinition;
 
+
 import java.util.Set;
 
 public class CustomModelDataFloat implements RangePropertyHandler {

@@ -1,10 +1,10 @@
 package timmychips.modefiteitemdefinitions.property.resolver.selectcase;
 
 import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.BlockStateComponent;
+import timmychips.modefiteitemdefinitions.comp.BlockStateComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import timmychips.modefiteitemdefinitions.comp.DataComponentTypes;
 import timmychips.modefiteitemdefinitions.property.handler.SelectPropertyHandler;
 import timmychips.modefiteitemdefinitions.property.type.codec.SelectDefinition;
 

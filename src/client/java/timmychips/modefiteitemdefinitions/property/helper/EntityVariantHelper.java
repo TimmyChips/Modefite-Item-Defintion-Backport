@@ -17,7 +17,20 @@ public class EntityVariantHelper {
     /// Not components in this version, but are in 1.21.5
     static final List<Identifier> ENTITY_VARIANTS = List.of(
             new Identifier("minecraft", "axolotl/variant"),
-            new Identifier("minecraft", "frog/variant")
+            new Identifier("minecraft", "frog/variant"),
+            new Identifier("minecraft", "cat/variant"),
+
+        new Identifier("minecraft", "fox/variant"),
+
+        new Identifier("minecraft", "wolf/variant"),
+        new Identifier("minecraft", "rabbit/variant"),
+
+            new Identifier("minecraft", "parrot/variant"),
+            new Identifier("minecraft", "painting/variant"),
+        new Identifier("minecraft", "mooshroom/variant"),
+            new Identifier("minecraft", "horse/variant"),
+        new Identifier("minecraft", "llama/variant")
+
     );
 
     // Axolotl variant names
@@ -28,6 +41,13 @@ public class EntityVariantHelper {
                     new Identifier("minecraft", "gold"),
                     new Identifier("minecraft", "cyan"),
                     new Identifier("minecraft", "blue")
+            )
+    );
+
+    static final ArrayList<Identifier> FOX_VARIANT_LIST = new ArrayList<>(
+            Arrays.asList(
+                    new Identifier("minecraft", "lucy"),
+                    new Identifier("minecraft", "lucy")
             )
     );
 

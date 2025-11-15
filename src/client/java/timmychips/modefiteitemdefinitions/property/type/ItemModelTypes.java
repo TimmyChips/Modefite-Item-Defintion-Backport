@@ -3,6 +3,7 @@ package timmychips.modefiteitemdefinitions.property.type;
 import com.mojang.serialization.Codec;
 import net.minecraft.util.Identifier;
 import timmychips.modefiteitemdefinitions.ClientInitializer;
+import timmychips.modefiteitemdefinitions.comp.CodecHelper;
 import timmychips.modefiteitemdefinitions.property.helper.DefinitionIdMapper;
 import timmychips.modefiteitemdefinitions.property.type.codec.*;
 
@@ -13,7 +14,7 @@ import java.util.Set;
 
 public class ItemModelTypes {
     public static final DefinitionIdMapper ID_MAPPER = new DefinitionIdMapper();
-    public static final Codec<ItemModelDefinition> CODEC = Codec.lazyInitialized(() -> ID_MAPPER.getCodec(Identifier.CODEC));
+    public static final Codec<ItemModelDefinition> CODEC = CodecHelper.lazyInitialized(() -> ID_MAPPER.getCodec(Identifier.CODEC));
 
     static {
         // Place all items model types into mapper to register the codec types
