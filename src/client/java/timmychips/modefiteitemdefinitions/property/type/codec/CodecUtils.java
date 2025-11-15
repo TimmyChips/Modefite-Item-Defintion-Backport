@@ -14,7 +14,7 @@ public class CodecUtils {
         ).xmap(
                 either -> either.map(List::of, list -> list),
                 list -> list.size() == 1
-                        ? Either.left(list.getFirst())
+                        ? Either.left(list.get(0))
                         : Either.right(list)
         );
     }

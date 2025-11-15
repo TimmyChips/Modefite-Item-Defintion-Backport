@@ -83,4 +83,9 @@ public class MathUtils {
         return globalPos != null && getDimension(globalPos) != null && getPos(globalPos) != null;
     }
     // i used reflection to get acces to mathpos since idk but minecraft said it's private :(
+
+    // Since Java 21 added Math.clamp; compat with Java 17
+    public static float clamp(float value, float min, float max) {
+        return Math.max(min, Math.min(value, max));
+    }
 }

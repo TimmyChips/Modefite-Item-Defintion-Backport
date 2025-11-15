@@ -2,6 +2,7 @@ package timmychips.modefiteitemdefinitions.property.resolver.rangeentry;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import timmychips.modefiteitemdefinitions.comp.util.MathUtils;
 import timmychips.modefiteitemdefinitions.property.handler.RangePropertyHandler;
 import timmychips.modefiteitemdefinitions.property.type.codec.RangeDispatchDefinition;
 
@@ -15,6 +16,6 @@ public class CountFloat implements RangePropertyHandler {
 
         return should_normalize ?
                 (float) count / maxStack // return count divided by minecraft:max_stack_size component, clamped to 0.0 to 1.0
-                : Math.clamp(count, 0F, maxStack); // return count clamped from 0 to minecraft:max_stack_size
+                : MathUtils.clamp(count, 0F, maxStack); // return count clamped from 0 to minecraft:max_stack_size
     }
 }

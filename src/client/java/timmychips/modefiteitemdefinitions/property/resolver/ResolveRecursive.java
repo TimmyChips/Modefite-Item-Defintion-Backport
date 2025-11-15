@@ -42,54 +42,51 @@ public class ResolveRecursive {
 
         FabricBakedModelManager manager = getBakedModelManager();
 
-        switch (def) {
-            case ModelDefinition model -> {
-                BakedModel bakedModel = manager.getModel(model.model());
-                return bakedModel == null ? Optional.empty() : Optional.of(bakedModel);
-            }
-            case EmptyModelDefinition emptyModelDefinition -> {
-                return Optional.of(new EmptyItemModel());
-            }
-            case CompositeModelDefinition composite -> {
-                if (composite.models().isEmpty()) return missingFallbackModel(stack, null, composite.type());
-                return Optional.of(new CompositeItemModel(composite.models(), renderMode, stack, entity)); // Returns combined item models
-            }
-            case SelectDefinition.Definition select -> {
-                String propertyValue = SelectValueResolver.evaluate(select.property(), renderMode, select, stack, entity);
+        if (def instanceof ModelDefinition model) {
+            BakedModel bakedModel = manager.getModel(model.model());
+            return bakedModel == null ? Optional.empty() : Optional.of(bakedModel);
 
-                if (propertyValue != null) {
-                    for (SelectDefinition.Case<String> c : select.cases()) {
-                        if (c.when().contains(propertyValue)) {
-                            return resolve(c.model(), renderMode, stack, entity);
-                        }
+        } else if (def instanceof EmptyModelDefinition emptyModelDefinition) {
+            return Optional.of(new EmptyItemModel());
+
+        } else if (def instanceof CompositeModelDefinition composite) {
+            if (composite.models().isEmpty()) return missingFallbackModel(stack, null, composite.type());
+            return Optional.of(new CompositeItemModel(composite.models(), renderMode, stack, entity)); // Returns combined item models
+
+        } else if (def instanceof SelectDefinition.Definition select) {
+            String propertyValue = SelectValueResolver.evaluate(select.property(), renderMode, select, stack, entity);
+
+            if (propertyValue != null) {
+                for (SelectDefinition.Case<String> c : select.cases()) {
+                    if (c.when().contains(propertyValue)) {
+                        return resolve(c.model(), renderMode, stack, entity);
                     }
                 }
+            }
 
-                return select.fallback() != null
-                        ? resolve(select.fallback(), renderMode, stack, entity)
-                        : missingFallbackModel(stack, select.property(), select.type());
-            }
-            case ConditionDefinition cond -> {
-                boolean result = ConditionValueResolver.evaluate(cond.property(), stack, entity, cond);
-                return result
-                        ? resolve(cond.on_true(), renderMode, stack, entity)
-                        : resolve(cond.on_false(), renderMode, stack, entity);
-            }
-            case RangeDispatchDefinition.Definition range -> {
-                float value = RangeDispatchValueResolver.evaluate(range.property(), range.scale(), stack, entity, range);
+            return select.fallback() != null
+                    ? resolve(select.fallback(), renderMode, stack, entity)
+                    : missingFallbackModel(stack, select.property(), select.type());
 
-                ModelTransformationMode finalRenderMode = renderMode;
-                return range.entries().stream()
-                        .sorted((a, b) -> Float.compare(b.threshold(), a.threshold())) // highest threshold first
-                        .filter(entry -> value >= entry.threshold())
-                        .findFirst()
-                        .map(entry -> resolve(entry.model(), finalRenderMode, stack, entity))
-                        .orElseGet(() -> range.fallback() != null
-                                ? resolve(range.fallback(), finalRenderMode, stack, entity)
-                                : missingFallbackModel(stack, range.property(), range.type()));
-            }
-            default -> {
-            }
+        } else if (def instanceof ConditionDefinition cond) {
+            boolean result = ConditionValueResolver.evaluate(cond.property(), stack, entity, cond);
+            return result
+                    ? resolve(cond.on_true(), renderMode, stack, entity)
+                    : resolve(cond.on_false(), renderMode, stack, entity);
+
+        } else if (def instanceof RangeDispatchDefinition.Definition range) {
+
+            float value = RangeDispatchValueResolver.evaluate(range.property(), range.scale(), stack, entity, range);
+
+            ModelTransformationMode finalRenderMode = renderMode;
+            return range.entries().stream()
+                    .sorted((a, b) -> Float.compare(b.threshold(), a.threshold())) // highest threshold first
+                    .filter(entry -> value >= entry.threshold())
+                    .findFirst()
+                    .map(entry -> resolve(entry.model(), finalRenderMode, stack, entity))
+                    .orElseGet(() -> range.fallback() != null
+                            ? resolve(range.fallback(), finalRenderMode, stack, entity)
+                            : missingFallbackModel(stack, range.property(), range.type()));
         }
 
         return Optional.empty();

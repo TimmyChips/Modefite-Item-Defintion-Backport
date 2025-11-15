@@ -2,6 +2,7 @@ package timmychips.modefiteitemdefinitions.property.resolver.rangeentry;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import timmychips.modefiteitemdefinitions.comp.util.MathUtils;
 import timmychips.modefiteitemdefinitions.property.handler.RangePropertyHandler;
 import timmychips.modefiteitemdefinitions.property.type.codec.RangeDispatchDefinition;
 
@@ -14,6 +15,6 @@ public class DamageFloat implements RangePropertyHandler {
 
         return should_normalize
                 ? (float) damage / maxDamage // return normalized count based on item's max damage
-                : Math.clamp(damage, 0F, maxDamage);
+                : MathUtils.clamp(damage, 0F, maxDamage);
     }
 }
