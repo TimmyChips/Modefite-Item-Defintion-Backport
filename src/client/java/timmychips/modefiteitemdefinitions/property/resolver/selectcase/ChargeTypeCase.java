@@ -1,12 +1,16 @@
 package timmychips.modefiteitemdefinitions.property.resolver.selectcase;
 
 import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ChargedProjectilesComponent;
+//import net.minecraft.component.DataComponentTypes;
+//import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtElement;
+import timmychips.modefiteitemdefinitions.comp.ChargedProjectilesComponent;
+import timmychips.modefiteitemdefinitions.comp.ComponentType;
+import timmychips.modefiteitemdefinitions.comp.DataComponentTypes;
 import timmychips.modefiteitemdefinitions.property.handler.SelectPropertyHandler;
 import timmychips.modefiteitemdefinitions.property.type.codec.SelectDefinition;
 
@@ -30,7 +34,10 @@ public class ChargeTypeCase implements SelectPropertyHandler {
     @Override
     public String getValue(ItemStack stack, LivingEntity entity, ModelTransformationMode mode, SelectDefinition.Definition definition) {
         // Safely extract the first charged projectile type
-        ChargedProjectilesComponent charged = stack.get(DataComponentTypes.CHARGED_PROJECTILES);
+        NbtElement chargedNbt = ComponentType.CHARGED_PROJECTILES.get(stack);
+        if (chargedNbt == null) return "none";
+  ChargedProjectilesComponent charged = ChargedProjectilesComponent.fromNbt(chargedNbt);
+        if (charged == null || charged.isEmpty()) return "none";
 
         // Custom fields
         boolean ignore_default = definition.chargeIgnoreDefault(); // Ignores default behavior

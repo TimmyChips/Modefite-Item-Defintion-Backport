@@ -13,7 +13,7 @@ public class DefinitionIdMapper {
     private final BiMap<Identifier, MapCodec<? extends ItemModelDefinition>> idToCodec = HashBiMap.create();
 
     public Codec<ItemModelDefinition> getCodec(Codec<Identifier> idCodec) {
-        return idCodec.dispatch(
+        return idCodec.<ItemModelDefinition>dispatch(
                 // from definition -> id
                 def -> {
                     MapCodec<? extends ItemModelDefinition> codec = def.getCodec();
@@ -29,7 +29,7 @@ public class DefinitionIdMapper {
                     if (codec == null) {
                         throw new IllegalStateException("Unknown codec id: " + id);
                     }
-                    return codec;
+                    return codec.codec();
                 }
         );
     }
@@ -40,3 +40,4 @@ public class DefinitionIdMapper {
         return this;
     }
 }
+//

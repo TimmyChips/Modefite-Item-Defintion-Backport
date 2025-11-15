@@ -1,12 +1,17 @@
 package timmychips.modefiteitemdefinitions.property.resolver.selectcase;
 
 import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.CustomModelDataComponent;
+//import net.minecraft.component.DataComponentTypes;
+//import net.minecraft.component.type.CustomModelDataComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import timmychips.modefiteitemdefinitions.comp.ComponentType;
+import timmychips.modefiteitemdefinitions.comp.CustomModelDataComponent;
+import timmychips.modefiteitemdefinitions.comp.DataComponentTypes;
 import timmychips.modefiteitemdefinitions.property.handler.SelectPropertyHandler;
 import timmychips.modefiteitemdefinitions.property.type.codec.SelectDefinition;
+
+import java.util.Optional;
 
 /**
  * Return custom model data int component value on item as string
@@ -15,8 +20,11 @@ import timmychips.modefiteitemdefinitions.property.type.codec.SelectDefinition;
 public class CustomModelDataCase implements SelectPropertyHandler {
     @Override
     public String getValue(ItemStack stack, LivingEntity entity, ModelTransformationMode mode, SelectDefinition.Definition definition) {
-        CustomModelDataComponent custom_model_data = stack.get(DataComponentTypes.CUSTOM_MODEL_DATA);
+        CustomModelDataComponent custom_model_data = Optional.ofNullable(ComponentType.CUSTOM_MODEL_DATA.get(stack))
+                .map(CustomModelDataComponent::new)
+                .orElse(null);
         if (custom_model_data == null) return null;
         return String.valueOf(custom_model_data.value());
     }
+    //WIP still returns same integer has the same interaces as old retrives same integer from NBT
 }

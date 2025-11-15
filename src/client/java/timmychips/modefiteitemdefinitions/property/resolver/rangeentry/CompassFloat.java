@@ -5,8 +5,10 @@ import com.mojang.serialization.Codec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LodestoneTrackerComponent;
+//import net.minecraft.component.DataComponentTypes;
+//import net.minecraft.component.type.LodestoneTrackerComponent;
+import net.minecraft.nbt.NbtCompound;
+import timmychips.modefiteitemdefinitions.comp.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,6 +20,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
+import timmychips.modefiteitemdefinitions.comp.DataComponentTypes;
+import timmychips.modefiteitemdefinitions.comp.LodestoneTrackerComponent;
+import timmychips.modefiteitemdefinitions.comp.util.MathUtils;
 import timmychips.modefiteitemdefinitions.property.handler.RangePropertyHandler;
 import timmychips.modefiteitemdefinitions.property.type.codec.RangeDispatchDefinition;
 
@@ -61,9 +66,15 @@ public class CompassFloat implements RangePropertyHandler {
         if (!canPointTo(entity, pos)) return this.getAimlessAngle(0, time, should_wobble); // compass randomly rotates if it cant point at block
 
         // Angle float calculation
-        double angle = this.getAngleTo(entity, pos.pos());
+        BlockPos targetPos = MathUtils.getPos(pos);
+        if (targetPos == null) {
+            return this.getAimlessAngle(0, time, should_wobble);
+        }
+
+        double angle = this.getAngleTo(entity, targetPos);
         double yaw = this.getBodyYaw(entity);
         double adjusted;
+
 
         // Performs interpolated wobble if true
         if (should_wobble) {
@@ -95,8 +106,13 @@ public class CompassFloat implements RangePropertyHandler {
     private GlobalPos getTargetPosition(ClientWorld world, ItemStack stack, LivingEntity holder, CompassTarget target) {
         return switch (target) {
             case LODESTONE -> {
-                LodestoneTrackerComponent comp = stack.get(DataComponentTypes.LODESTONE_TRACKER);
+                NbtCompound nbt = stack.getNbt();
+                if (nbt == null) {
+                    yield null;
+                }
+                LodestoneTrackerComponent comp = LodestoneTrackerComponent.fromNbt(nbt);
                 yield comp != null ? comp.target().orElse(null) : null;
+
             }
             case SPAWN -> GlobalPos.create(world.getRegistryKey(), world.getSpawnPos());
             case RECOVERY -> {
@@ -114,8 +130,17 @@ public class CompassFloat implements RangePropertyHandler {
     }
 
     private boolean canPointTo(Entity entity, @Nullable GlobalPos pos) {
-        return pos != null && pos.dimension() == entity.getWorld().getRegistryKey() && !(pos.pos().getSquaredDistance(entity.getPos()) < 9.999999747378752E-6);
+        if (pos == null) return false;
+
+        if (!MathUtils.isSameDimension(pos, null, entity.getWorld().getRegistryKey())) {
+            return false;
+        }
+        BlockPos targetPos = MathUtils.getPos(pos);
+        if (targetPos == null) return false;
+
+        return !(targetPos.getSquaredDistance(entity.getPos()) < 9.999999747378752E-6);
     }
+
 
     private float getBodyYaw(LivingEntity entity) {
         return MathHelper.floorMod(entity.getBodyYaw() / 360.0F, 1.0F);
