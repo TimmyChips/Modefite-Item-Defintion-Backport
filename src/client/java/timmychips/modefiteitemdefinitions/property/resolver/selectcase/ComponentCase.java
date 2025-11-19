@@ -52,6 +52,7 @@ public class ComponentCase implements SelectPropertyHandler {
                 if (WARNED_MODELS.add(key)) LOGGER.warn("Unknown component predicate componentType: '{}'", componentId);
                 return null;
             }
+            return null;
         }
 
         String str;
