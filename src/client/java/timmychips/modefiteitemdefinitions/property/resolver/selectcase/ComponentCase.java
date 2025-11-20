@@ -58,9 +58,10 @@ public class ComponentCase implements SelectPropertyHandler {
         Object componentValue = stack.get(componentType);
         if (componentValue instanceof Text textValue) {
             str = textValue.getString(); // Get the string without the surrounding literal from Text component types, and with string as is
+            return str; // Return just the string for text
         }
-        else str = String.valueOf(componentValue).toLowerCase(); // Convert value to lower case string
+        else str = String.valueOf(componentValue).toLowerCase(); // Convert non-text values to lower case string
 
-        return String.valueOf(Identifier.tryParse(str)); // Return component value as string in identifier format (even for text)
+        return String.valueOf(Identifier.tryParse(str)); // Return component non-text value as string in identifier format
     }
 }
