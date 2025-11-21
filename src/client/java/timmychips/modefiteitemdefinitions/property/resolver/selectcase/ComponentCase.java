@@ -10,6 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import timmychips.modefiteitemdefinitions.comp.ComponentType;
+import timmychips.modefiteitemdefinitions.comp.util.TextUtils;
 import timmychips.modefiteitemdefinitions.property.handler.SelectPropertyHandler;
 import timmychips.modefiteitemdefinitions.property.helper.EntityVariantHelper;
 import timmychips.modefiteitemdefinitions.property.resolver.ResolveRecursive;
@@ -58,11 +59,12 @@ public class ComponentCase implements SelectPropertyHandler {
         String str;
 
         Object componentValue = componentType.get(stack);
-        if (componentValue instanceof Text textValue) {
-            str = textValue.getString(); // Get the string without the surrounding literal from Text component types, and with string as is
+        if (componentValue instanceof String textValue) {
+            str = TextUtils.fromLiteral(textValue); // Get string text contents
+            return str; // Return just the string for text
         }
-        else str = String.valueOf(componentValue).toLowerCase(); // Convert value to lower case string
+        else str = String.valueOf(componentValue).toLowerCase(); // Convert non-text values to lower case string
 
-        return String.valueOf(Identifier.tryParse(str)); // Return component value as string in identifier format (even for text)
+        return String.valueOf(Identifier.tryParse(str)); // Return component non-text value as string in identifier format
     }
 }

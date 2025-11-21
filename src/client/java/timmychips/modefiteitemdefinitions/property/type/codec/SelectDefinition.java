@@ -41,7 +41,12 @@ public final class SelectDefinition {
                         .map(c -> new Case<String>(
                                 c.model(),
                                 c.when.stream()
-                                        .map(whenCondition -> String.valueOf(Identifier.tryParse(whenCondition)))
+                                        .map(whenCondition -> {
+                                            // Try parse the condition string into identifier format. If it's string, "null", just return the
+                                            // when condition string as is for stuff like the custom_name component
+                                            String idStr = String.valueOf(Identifier.tryParse(whenCondition));
+                                            return !idStr.equals("null") ? idStr : whenCondition;
+                                        })
                                         .collect(Collectors.toCollection(HashSet::new))
                         ))
                         .toList();
