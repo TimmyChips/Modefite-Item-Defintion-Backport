@@ -1,8 +1,9 @@
 package timmychips.modefiteitemdefinitions.property.handler;
 
-import net.minecraft.client.render.model.json.ModelTransformationMode;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ModelTransformationMode;
 import timmychips.modefiteitemdefinitions.property.type.codec.SelectDefinition;
 
 @FunctionalInterface

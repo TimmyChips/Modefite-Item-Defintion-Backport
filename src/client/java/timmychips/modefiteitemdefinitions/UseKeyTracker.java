@@ -11,7 +11,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.slf4j.Logger;
 import timmychips.modefiteitemdefinitions.objects.PlayerHeldItem;
@@ -60,6 +61,7 @@ public class UseKeyTracker {
                 UUID playerUuid = user.getUuid();
 
                 // Get the base item from user and convert to default stack to avoid component map crashes
+
                 Item itemUsed = user.getStackInHand(hand).getItem();
                 ItemStack defaultStack = itemUsed.getDefaultStack();
 
@@ -69,7 +71,7 @@ public class UseKeyTracker {
                 }
             }
 
-			return TypedActionResult.pass(user.getStackInHand(hand)); // Pass to return that we did the event
+			return ActionResult.PASS; // Pass to return that we did the event
 		});
     }
 

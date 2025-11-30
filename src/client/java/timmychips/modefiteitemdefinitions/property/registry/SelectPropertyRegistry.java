@@ -1,8 +1,9 @@
 package timmychips.modefiteitemdefinitions.property.registry;
 
-import net.minecraft.client.render.model.json.ModelTransformationMode;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.util.Identifier;
 import timmychips.modefiteitemdefinitions.property.handler.SelectPropertyHandler;
 import timmychips.modefiteitemdefinitions.property.resolver.selectcase.*;
