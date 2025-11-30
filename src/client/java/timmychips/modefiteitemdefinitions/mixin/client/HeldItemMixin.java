@@ -8,16 +8,15 @@ import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedModelManager;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MatrixUtil;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -41,10 +40,15 @@ public abstract class HeldItemMixin {
     @Unique
     private static final ThreadLocal<Boolean> RENDERING_LIVING_ENTITY = ThreadLocal.withInitial(() -> false);
 
+    @Shadow
+    protected abstract void renderBakedItemModel(BakedModel model, ItemStack stack, int light, int overlay, MatrixStack matrices, VertexConsumer vertices);
+
+    @Shadow
+    @Final
+    private BuiltinModelItemRenderer builtinModelItemRenderer;
+
     // Gets custom model for GUI model mode so the item model changes for the GUI
-    @Inject(method = "getModel(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;I)Lnet/minecraft/client/render/model/BakedModel;",
-            at = @At("HEAD"),
-            cancellable = true)
+    @Inject(method = "getModel", at = @At("HEAD"), cancellable = true)
     private void modefite$overrideGUIModel(ItemStack stack, World world, LivingEntity entity, int seed, CallbackInfoReturnable<BakedModel> cir) {
         BakedModel gui_model = getCustomModel(stack, entity, ModelTransformationMode.GUI);
         if (gui_model != null) {
@@ -52,29 +56,11 @@ public abstract class HeldItemMixin {
         }
     }
 
-    @Shadow
-    private void renderBakedItemModel(BakedModel model, ItemStack stack, int light, int overlay, MatrixStack matrices, VertexConsumer vertices) {/*dummy body*/}
-
-    @Shadow
-    private final BuiltinModelItemRenderer builtinModelItemRenderer = this.builtinModelItemRenderer;
-
-    @Shadow
-    private static boolean usesDynamicDisplay(ItemStack stack) {
-        return stack.isIn(ItemTags.COMPASSES) || stack.isOf(Items.CLOCK);
-    }
-
-    @Shadow
-    public static VertexConsumer getDirectItemGlintConsumer(VertexConsumerProvider provider, RenderLayer layer, boolean solid, boolean glint) {
-        return glint
-                ? VertexConsumers.union(provider.getBuffer(solid ? RenderLayer.getGlint() : RenderLayer.getDirectEntityGlint()), provider.getBuffer(layer))
-                : provider.getBuffer(layer);
-    }
-
     /**
      * Performs item renderer methods for each baked model if baked model is a composite item model
      * <p> Code is mostly from vanilla target method with the major difference being it performs the method for each modelPart of the composite item model
      */
-    @Inject(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V",
+    @Inject(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V",
             at = @At(value = "HEAD"),
             cancellable = true)
     private void modefite$renderCompositeOrItemEntityModel(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
@@ -94,10 +80,12 @@ public abstract class HeldItemMixin {
                         matrices.translate(-0.5F, -0.5F, -0.5F);
 
                         if (!model.isBuiltin() || bl) {
-                            RenderLayer renderLayer = RenderLayers.getItemLayer(stack, true);
+
+                            RenderLayer renderLayer = RenderLayers.getItemLayer(stack);
                             VertexConsumer vertexConsumer;
 
-                            vertexConsumer = getDirectItemGlintConsumer(vertexConsumers, renderLayer, true, stack.hasGlint());
+
+                            vertexConsumer = ItemRenderer.getItemGlintConsumer(vertexConsumers, renderLayer, true, stack.hasGlint());
 
                             MatrixStack.Entry entry = matrices.peek().copy();
                             if (renderMode == ModelTransformationMode.GUI) {
@@ -135,12 +123,12 @@ public abstract class HeldItemMixin {
     }
 
     // Replaces entity item render with our custom model
-    @Inject(method = "renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/world/World;III)V",
+    @Inject(method = "renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/world/World;III)V",
             at = @At(value = "HEAD"),
             cancellable = true)
     private void modefite$interceptRender(LivingEntity entity, ItemStack item, ModelTransformationMode renderMode, boolean leftHanded,
-                                        MatrixStack matrices, VertexConsumerProvider vertexConsumers, World world,
-                                        int light, int overlay, int seed, CallbackInfo ci) {
+                                          MatrixStack matrices, VertexConsumerProvider vertexConsumers, World world,
+                                          int light, int overlay, int seed, CallbackInfo ci) {
 
         if (RENDERING_LIVING_ENTITY.get()) {
             // Already in recursive rendering call — skip this render method call
@@ -163,26 +151,13 @@ public abstract class HeldItemMixin {
         }
     }
 
-    /*
     @Inject(
-            method = "renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/world/World;III)V",
-            at = @At("HEAD")
-    )
-    private void modefite$markEntityRenderStart(LivingEntity entity, ItemStack stack, ModelTransformationMode mode, boolean leftHanded,
-                                                 MatrixStack matrices, VertexConsumerProvider vertexConsumers, World world,
-                                                 int light, int overlay, int seed, CallbackInfo ci) {
-        RENDERING_ENTITY.set(true); // this works?
-    }
-
-     */
-
-    @Inject(
-            method = "renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/world/World;III)V",
+            method = "renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/world/World;III)V",
             at = @At("RETURN")
     )
     private void modefite$markEntityRenderEnd(LivingEntity entity, ItemStack stack, ModelTransformationMode mode, boolean leftHanded,
-                                               MatrixStack matrices, VertexConsumerProvider vertexConsumers, World world,
-                                               int light, int overlay, int seed, CallbackInfo ci) {
+                                              MatrixStack matrices, VertexConsumerProvider vertexConsumers, World world,
+                                              int light, int overlay, int seed, CallbackInfo ci) {
         RENDERING_LIVING_ENTITY.set(false);
     }
 
@@ -209,4 +184,3 @@ public abstract class HeldItemMixin {
         return null;
     }
 }
-

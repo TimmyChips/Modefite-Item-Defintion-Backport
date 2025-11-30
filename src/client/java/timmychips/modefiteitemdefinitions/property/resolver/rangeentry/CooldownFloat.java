@@ -11,7 +11,7 @@ public class CooldownFloat implements RangePropertyHandler {
     public float getValue(ItemStack stack, LivingEntity entity, RangeDispatchDefinition.Definition definition) {
         float cooldown = 0F;
         if (entity instanceof PlayerEntity player) {
-            cooldown = player.getItemCooldownManager().getCooldownProgress(stack.getItem(), 0F);
+            cooldown = player.getItemCooldownManager().getCooldownProgress(stack, 0F);
         }
         return cooldown;
     }

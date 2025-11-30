@@ -1,10 +1,11 @@
 package timmychips.modefiteitemdefinitions.property.resolver.selectcase;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
+
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;

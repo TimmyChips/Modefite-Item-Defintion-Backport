@@ -1,9 +1,10 @@
 package timmychips.modefiteitemdefinitions.property.resolver;
 
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.util.Identifier;
 import timmychips.modefiteitemdefinitions.property.type.ItemModelTypes;
 import timmychips.modefiteitemdefinitions.property.type.codec.ItemModelDefinition;

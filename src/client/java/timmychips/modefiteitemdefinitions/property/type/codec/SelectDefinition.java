@@ -10,8 +10,6 @@ import timmychips.modefiteitemdefinitions.property.type.ItemModelTypes;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.mojang.text2speech.Narrator.LOGGER;
-
 public final class SelectDefinition {
     public record Definition(
             Identifier type,
