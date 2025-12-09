@@ -1,10 +1,7 @@
 package timmychips.modefiteitemdefinitions.comp;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtInt;
-import net.minecraft.nbt.NbtString;
+import net.minecraft.nbt.*;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,6 +58,9 @@ public class ComponentType<T> {
             }
             case 8 -> { // string
                 if (element instanceof NbtString nbtString) return (T) nbtString.asString();
+            }
+            case 9 -> { // nbtList
+                if (element instanceof NbtList nbtList) return (T) nbtList;
             }
             case 10 -> { // compound
                 if (element instanceof NbtCompound nbtCompound) return (T) nbtCompound;
