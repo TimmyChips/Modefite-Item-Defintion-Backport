@@ -3,9 +3,12 @@ package timmychips.modefiteitemdefinitions.property.resolver.selectcase;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.component.ComponentType;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -63,5 +66,31 @@ public class ComponentCase implements SelectPropertyHandler {
         else str = String.valueOf(componentValue).toLowerCase(); // Convert non-text values to lower case string
 
         return String.valueOf(Identifier.tryParse(str)); // Return component non-text value as string in identifier format
+    }
+
+    // Reads a component's enchantment map, for matching against a select case's map "when"
+    public static Optional<Map<String, Integer>> getComponentEntries(ItemStack stack, String component) {
+        Identifier componentId = Identifier.tryParse(component);
+        if (componentId == null) return Optional.empty();
+
+        ComponentType<?> componentType = Registries.DATA_COMPONENT_TYPE.get(componentId);
+        if (componentType == null) return Optional.empty();
+
+        Object value = stack.get(componentType);
+        if (!(value instanceof ItemEnchantmentsComponent enchantments)) return Optional.empty();
+
+        Map<String, Integer> entries = new HashMap<>();
+        for (RegistryEntry<net.minecraft.enchantment.Enchantment> entry : enchantments.getEnchantments()) {
+            Identifier id = entry.getKey().map(RegistryKey::getValue).orElse(null);
+            if (id != null) entries.put(id.toString(), enchantments.getLevel(entry));
+        }
+        return Optional.of(entries);
+    }
+
+    public static boolean matchesAll(Map<String, Integer> want, Map<String, Integer> actual) {
+        for (Map.Entry<String, Integer> entry : want.entrySet()) {
+            if (!entry.getValue().equals(actual.get(entry.getKey()))) return false;
+        }
+        return true;
     }
 }

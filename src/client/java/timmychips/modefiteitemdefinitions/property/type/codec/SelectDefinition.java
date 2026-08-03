@@ -1,5 +1,6 @@
 package timmychips.modefiteitemdefinitions.property.type.codec;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -39,16 +40,16 @@ public final class SelectDefinition {
         public Definition {
             if (shouldParseToId.contains(property)) {
                 cases = cases.stream()
-                        .map(c -> new Case<String>(
+                        .map(c -> c.isComponentMap() ? c : new Case<String>(
                                 c.model(),
-                                c.when.stream()
+                                Either.left(c.valueSet().stream()
                                         .map(whenCondition -> {
                                             // Try parse the condition string into identifier format. If it's string, "null", just return the
                                             // when condition string as is for stuff like the custom_name component
                                             String idStr = String.valueOf(Identifier.tryParse(whenCondition));
                                             return !idStr.equals("null") ? idStr : whenCondition;
                                         })
-                                        .collect(Collectors.toCollection(HashSet::new))
+                                        .collect(Collectors.toCollection(HashSet::new)))
                         ))
                         .toList();
             }
@@ -96,18 +97,32 @@ public final class SelectDefinition {
      * @param when the property to match for
      * @param <T> type is either String or Identifier object
      */
-    public record Case<T>(ItemModelDefinition model, HashSet<T> when) {
+    public record Case<T>(ItemModelDefinition model, Either<HashSet<T>, List<Map<String, Integer>>> when) {
         public static <T> Codec<Case<T>> codec(
                 Codec<ItemModelDefinition> selfCodec,
                 Codec<T> valueCodec
         ) {
+            Codec<Map<String, Integer>> componentMapCodec = Codec.unboundedMap(Codec.STRING, Codec.INT);
+            Codec<Either<HashSet<T>, List<Map<String, Integer>>>> whenCodec = Codec.either(
+                    CodecUtils.ofValueOrList(valueCodec).xmap(HashSet::new, ArrayList::new),
+                    CodecUtils.ofValueOrList(componentMapCodec)
+            );
             return RecordCodecBuilder.create(instance -> instance.group(
                     selfCodec.fieldOf("model").forGetter((Case<T> c) -> c.model),
-                    CodecUtils.ofValueOrList(valueCodec)
-                            .xmap(HashSet::new, ArrayList::new)
-                            .fieldOf("when")
-                            .forGetter((Case<T> c) -> c.when)
+                    whenCodec.fieldOf("when").forGetter((Case<T> c) -> c.when)
             ).apply(instance, Case::new));
+        }
+
+        public boolean isComponentMap() {
+            return this.when.right().isPresent();
+        }
+
+        public List<Map<String, Integer>> componentMaps() {
+            return this.when.right().orElseGet(List::of);
+        }
+
+        public HashSet<T> valueSet() {
+            return this.when.left().orElseGet(HashSet::new);
         }
     }
 }
