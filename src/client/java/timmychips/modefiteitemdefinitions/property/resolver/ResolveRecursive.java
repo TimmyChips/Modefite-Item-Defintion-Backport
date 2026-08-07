@@ -12,8 +12,10 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import timmychips.modefiteitemdefinitions.bakedmodels.CompositeItemModel;
 import timmychips.modefiteitemdefinitions.bakedmodels.EmptyItemModel;
+import timmychips.modefiteitemdefinitions.property.resolver.selectcase.ComponentCase;
 import timmychips.modefiteitemdefinitions.property.type.codec.*;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,11 +57,26 @@ public class ResolveRecursive {
                 return Optional.of(new CompositeItemModel(composite.models(), renderMode, stack, entity)); // Returns combined item models
             }
             case SelectDefinition.Definition select -> {
+                // Component map predicates (e.g. stored_enchantments) match against a map, not a single value
+                if (select.property().toString().equals("minecraft:component") && select.component() != null) {
+                    Optional<Map<String, Integer>> componentEntries = ComponentCase.getComponentEntries(stack, select.component());
+                    if (componentEntries.isPresent()) {
+                        for (SelectDefinition.Case<String> c : select.cases()) {
+                            if (c.isComponentMap() && c.componentMaps().stream().anyMatch(m -> ComponentCase.matchesAll(m, componentEntries.get()))) {
+                                return resolve(c.model(), renderMode, stack, entity);
+                            }
+                        }
+                        return select.fallback() != null
+                                ? resolve(select.fallback(), renderMode, stack, entity)
+                                : missingFallbackModel(stack, select.property(), select.type());
+                    }
+                }
+
                 String propertyValue = SelectValueResolver.evaluate(select.property(), renderMode, select, stack, entity);
 
                 if (propertyValue != null) {
                     for (SelectDefinition.Case<String> c : select.cases()) {
-                        if (c.when().contains(propertyValue)) {
+                        if (c.valueSet().contains(propertyValue)) {
                             return resolve(c.model(), renderMode, stack, entity);
                         }
                     }

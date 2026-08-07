@@ -3,6 +3,8 @@
   "package": "timmychips.modefiteitemdefinitions.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "ArmorTextureRedirectMixin",
+    "GameRendererShaderResilienceMixin",
     "HandleSlotAccessor",
     "HeldItemMixin",
     "HeldItemSwapMixin",
