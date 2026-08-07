@@ -85,6 +85,7 @@ public class ClientInitializer implements ClientModInitializer {
 			ResourceManager manager = MinecraftClient.getInstance().getResourceManager();
 
 			timmychips.modefiteitemdefinitions.property.resolver.ArmorTextureRedirect.clearCache();
+			timmychips.modefiteitemdefinitions.property.resolver.VanillaShaderFactory.clearCache();
 			ItemModelTypes.Registry.clear();
 			RangePropertyRegistry.init();
 			ConditionPropertyRegistry.init();
